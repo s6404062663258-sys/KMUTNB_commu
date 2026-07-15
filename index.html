@@ -25,6 +25,37 @@
         /* Language Toggle Logic */
         body.th-mode [data-lang="en"] { display: none !important; }
         body.en-mode [data-lang="th"] { display: none !important; }
+
+        /* Mockup Animations */
+        #mockup-modal { opacity: 0; pointer-events: none; transition: all 0.5s cubic-bezier(0.23, 1, 0.32, 1); transform: scale(0.95) translateY(20px); backdrop-filter: blur(0px); }
+        #mockup-modal.show { opacity: 1; pointer-events: auto; transform: scale(1) translateY(0); backdrop-filter: blur(8px); }
+        .mockup-bar { width: 0%; transition: width 1.2s cubic-bezier(0.34, 1.56, 0.64, 1); }
+        /* When show is active on parent, we want the bars to animate to target widths */
+        #mockup-modal.show .mockup-bar-1 { width: 100%; } 
+        #mockup-modal.show .mockup-bar-2 { width: 66%; }  
+        #mockup-modal.show .mockup-bar-3 { width: 41%; }  
+        #mockup-modal.show .mockup-bar-4 { width: 33%; }  
+        #mockup-modal.show .mockup-bar-5 { width: 25%; }  
+        
+        .donut-chart {
+            background: conic-gradient(#10b981 0% 65%, #f59e0b 65% 72%, #6b7280 72% 93%, #ef4444 93% 100%);
+            border-radius: 50%;
+            transform: rotate(-90deg) scale(0.5); opacity: 0; transition: all 1.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+        #mockup-modal.show .donut-chart {
+            transform: rotate(0deg) scale(1); opacity: 1;
+        }
+
+        /* Auth Test Modal Animations */
+        #auth-test-modal { opacity: 0; pointer-events: none; transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1); backdrop-filter: blur(0px); }
+        #auth-test-modal.show { opacity: 1; pointer-events: auto; backdrop-filter: blur(8px); }
+        #auth-card { transform: scale(0.9) translateY(20px); transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1); }
+        #auth-test-modal.show #auth-card { transform: scale(1) translateY(0); }
+        
+        .loader-spinner { border: 3px solid rgba(255,255,255,0.1); border-top-color: #3b82f6; border-radius: 50%; width: 36px; height: 36px; animation: spin 1s linear infinite; }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        @keyframes shake { 0%, 100% { transform: translateX(0); } 20%, 60% { transform: translateX(-5px); } 40%, 80% { transform: translateX(5px); } }
+        .animate-shake { animation: shake 0.4s ease-in-out; }
     </style>
 </head>
 <body class="h-screen flex overflow-hidden en-mode">
@@ -530,9 +561,11 @@
 
             <!-- Slide 7: Auth Flow -->
             <div id="slide-7" class="slide space-y-6">
-                <h3 class="text-xl font-bold text-white mb-4">
-                    <span data-lang="en">Authentication Flow</span><span data-lang="th">ขั้นตอนการเข้าสู่ระบบ (Auth Flow)</span>
-                </h3>
+                <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-4 gap-4">
+                    <h3 class="text-xl font-bold text-white mb-0">
+                        <span data-lang="en">Authentication Flow</span><span data-lang="th">ขั้นตอนการเข้าสู่ระบบ (Auth Flow)</span>
+                    </h3>
+                </div>
                 
                 <div class="dashboard-card relative">
                     <h4 class="text-sm text-slate-400 mb-6 border-b border-slate-700 pb-2">
@@ -607,6 +640,16 @@
                         <code class="text-xs text-green-400 font-mono whitespace-nowrap">
                             OAuth callback → Session → email_verified → exact domain/format check → profile provisioning
                         </code>
+                    </div>
+
+                    <!-- Moved Test Button here (Centered at the bottom of the content) -->
+                    <div class="mt-8 flex justify-center border-t border-slate-700 pt-6">
+                        <button onclick="openAuthTest()" class="px-8 py-3 bg-white hover:bg-slate-100 text-slate-900 rounded-xl text-sm font-bold shadow-[0_0_20px_rgba(255,255,255,0.15)] transition-all hover:scale-105 flex items-center relative overflow-hidden group">
+                            <span class="absolute w-0 h-0 transition-all duration-300 ease-out bg-blue-500 rounded-full group-hover:w-64 group-hover:h-64 opacity-10"></span>
+                            <i class="fab fa-google text-red-500 text-lg mr-3 group-hover:animate-bounce"></i>
+                            <span data-lang="en">Test Google Sign-In</span>
+                            <span data-lang="th">ทดลองเข้าสู่ระบบ (Test Sign-In)</span>
+                        </button>
                     </div>
                 </div>
             </div>
@@ -871,7 +914,15 @@
             <div id="slide-11" class="slide space-y-6">
                 <div class="flex justify-between items-center mb-6">
                     <h3 class="text-xl font-bold text-white"><span data-lang="en">Admin Dashboard & Permissions</span><span data-lang="th">แดชบอร์ดผู้ดูแลระบบและสิทธิ์การใช้งาน</span></h3>
-                    <span class="bg-red-900/50 text-red-400 px-3 py-1 rounded-full text-xs font-bold border border-red-800">RESTRICTED ACCESS</span>
+                    <div class="flex items-center space-x-3">
+                        <button onclick="toggleMockup()" class="group relative px-4 py-2 bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-400 hover:to-purple-500 text-white rounded-lg shadow-lg shadow-purple-500/30 transition-all hover:scale-105 flex items-center overflow-hidden">
+                            <span class="absolute w-0 h-0 transition-all duration-500 ease-out bg-white rounded-full group-hover:w-56 group-hover:h-56 opacity-10"></span>
+                            <i class="fas fa-desktop mr-2 animate-pulse group-hover:animate-bounce"></i>
+                            <span data-lang="en" class="text-sm font-semibold">View UI Mockup</span>
+                            <span data-lang="th" class="text-sm font-semibold">ดูหน้าตา Mockup</span>
+                        </button>
+                        <span class="bg-red-900/50 text-red-400 px-3 py-1 rounded-full text-xs font-bold border border-red-800 flex items-center shadow-[0_0_15px_rgba(220,38,38,0.3)]">RESTRICTED ACCESS</span>
+                    </div>
                 </div>
 
                 <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
@@ -1035,6 +1086,289 @@
         </div>
     </main>
 
+    <!-- Admin Dashboard UI Mockup Overlay -->
+    <div id="mockup-modal" class="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/80 p-4 sm:p-8">
+        <div class="bg-[#f4f7f9] w-full max-w-6xl h-full max-h-[90vh] rounded-2xl shadow-[0_0_40px_rgba(0,0,0,0.5)] relative flex flex-col overflow-hidden border border-slate-700">
+            <!-- Modal Header -->
+            <div class="bg-white border-b border-slate-200 px-6 py-4 flex justify-between items-center z-10 shadow-sm">
+                <div class="flex items-center">
+                    <div class="w-8 h-8 rounded-full bg-slate-900 flex items-center justify-center mr-3">
+                        <i class="fas fa-shield-alt text-white text-xs"></i>
+                    </div>
+                    <h2 class="text-lg font-bold text-slate-800">
+                        <span data-lang="en">Admin Dashboard Preview</span>
+                        <span data-lang="th">ตัวอย่างหน้าจอผู้ดูแลระบบ</span>
+                    </h2>
+                </div>
+                <button onclick="toggleMockup()" class="w-10 h-10 rounded-full hover:bg-red-50 text-slate-400 hover:text-red-500 transition flex items-center justify-center group">
+                    <i class="fas fa-times text-xl group-hover:rotate-90 transition-transform duration-300"></i>
+                </button>
+            </div>
+
+            <!-- Modal Content (The Dashboard) -->
+            <div class="p-6 overflow-y-auto flex-1 font-sans text-slate-800" style="font-family: 'Inter', 'Noto Sans Thai', sans-serif;">
+                
+                <!-- Stats Row -->
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+                    <!-- Stat 1 -->
+                    <div class="bg-white rounded-xl p-5 border border-slate-200 shadow-sm flex items-center transform transition hover:-translate-y-1 hover:shadow-md">
+                        <div class="w-14 h-14 rounded-xl bg-emerald-100 flex items-center justify-center text-emerald-500 mr-4">
+                            <i class="fas fa-user-friends text-2xl"></i>
+                        </div>
+                        <div>
+                            <p class="text-xs font-bold text-slate-500 uppercase tracking-wider mb-1">
+                                <span data-lang="en">Students (ACTIVE)</span><span data-lang="th">นักศึกษา (ACTIVE)</span>
+                            </p>
+                            <div class="flex items-baseline">
+                                <h3 class="text-3xl font-black text-slate-800 mr-2">3,420</h3>
+                                <span class="text-xs font-semibold text-emerald-500 bg-emerald-50 px-2 py-0.5 rounded-full">
+                                    <span data-lang="en">+12 Today</span><span data-lang="th">+12 วันนี้</span>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Stat 2 -->
+                    <div class="bg-white rounded-xl p-5 border border-slate-200 shadow-sm flex items-center transform transition hover:-translate-y-1 hover:shadow-md">
+                        <div class="w-14 h-14 rounded-xl bg-red-100 flex items-center justify-center text-red-500 mr-4">
+                            <i class="fas fa-comment-alt text-2xl"></i>
+                        </div>
+                        <div>
+                            <p class="text-xs font-bold text-slate-500 uppercase tracking-wider mb-1">
+                                <span data-lang="en">Pending TICKETs (NEW)</span><span data-lang="th">TICKET รอตรวจสอบ (NEW)</span>
+                            </p>
+                            <div class="flex items-baseline">
+                                <h3 class="text-3xl font-black text-slate-800 mr-2">32</h3>
+                                <span class="text-xs font-semibold text-red-500 font-medium">
+                                    <span data-lang="en">5 Urgent</span><span data-lang="th">ด่วน 5 เคส</span>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Stat 3 -->
+                    <div class="bg-white rounded-xl p-5 border border-slate-200 shadow-sm flex items-center transform transition hover:-translate-y-1 hover:shadow-md">
+                        <div class="w-14 h-14 rounded-xl bg-blue-100 flex items-center justify-center text-blue-500 mr-4">
+                            <i class="fas fa-chart-line text-2xl"></i>
+                        </div>
+                        <div>
+                            <p class="text-xs font-bold text-slate-500 uppercase tracking-wider mb-1">
+                                <span data-lang="en">Posts/Activities this week</span><span data-lang="th">โพสต์/กิจกรรม สัปดาห์นี้</span>
+                            </p>
+                            <div class="flex items-baseline">
+                                <h3 class="text-3xl font-black text-slate-800 mr-2">389</h3>
+                                <span class="text-xs font-semibold text-blue-500 font-medium">
+                                    <span data-lang="en">Highly Active</span><span data-lang="th">Active สูง</span>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Charts Row -->
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    <!-- Bar Chart Card -->
+                    <div class="bg-white rounded-xl p-6 border border-slate-200 shadow-sm">
+                        <div class="flex items-center mb-6 border-l-4 border-red-500 pl-3">
+                            <div>
+                                <h3 class="font-bold text-slate-800 text-lg leading-tight">
+                                    <span data-lang="en">Current Pending Tickets Volume</span><span data-lang="th">ปริมาณ Ticket ที่รอตรวจสอบ ณ ปัจจุบัน</span>
+                                </h3>
+                                <p class="text-xs text-slate-500 mt-1">
+                                    <span data-lang="en">Categorized by issue type (NEW / IN REVIEW only)</span><span data-lang="th">แยกตามประเภทของปัญหา (เฉพาะสถานะ NEW / IN REVIEW)</span>
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="space-y-5 relative pt-2">
+                            <!-- X Axis Labels -->
+                            <div class="absolute bottom-0 left-32 right-0 flex justify-between text-[10px] text-slate-400 font-mono -mb-5 border-t border-slate-100 pt-1">
+                                <span>0</span><span>3</span><span>6</span><span>9</span><span>12</span>
+                            </div>
+                            
+                            <!-- Grid Lines -->
+                            <div class="absolute inset-y-0 left-32 right-0 flex justify-between pointer-events-none pb-4 pt-2">
+                                <div class="w-px h-full border-l border-dashed border-slate-200"></div>
+                                <div class="w-px h-full border-l border-dashed border-slate-200"></div>
+                                <div class="w-px h-full border-l border-dashed border-slate-200"></div>
+                                <div class="w-px h-full border-l border-dashed border-slate-200"></div>
+                                <div class="w-px h-full border-l border-dashed border-slate-200"></div>
+                            </div>
+
+                            <!-- Bar 1 -->
+                            <div class="flex items-center z-10 relative">
+                                <div class="w-32 text-right pr-4 text-xs font-bold text-slate-600 leading-tight">
+                                    <span data-lang="en">Account Extension<br><span class="text-[9px] font-normal text-slate-400">(OVERDUE)</span></span>
+                                    <span data-lang="th">ขอยืดอายุบัญชี<br><span class="text-[9px] font-normal text-slate-400">(OVERDUE)</span></span>
+                                </div>
+                                <div class="flex-1 h-6 bg-slate-100 rounded-r-md">
+                                    <div class="h-full bg-[#f59e0b] rounded-r-md mockup-bar mockup-bar-1 relative group cursor-pointer hover:brightness-110"></div>
+                                </div>
+                            </div>
+                            
+                            <!-- Bar 2 -->
+                            <div class="flex items-center z-10 relative">
+                                <div class="w-32 text-right pr-4 text-xs font-bold text-slate-600">
+                                    <span data-lang="en">Content/Post Report</span><span data-lang="th">รีพอร์ตเนื้อหา/โพสต์</span>
+                                </div>
+                                <div class="flex-1 h-6 bg-slate-100 rounded-r-md">
+                                    <div class="h-full bg-[#ef4444] rounded-r-md mockup-bar mockup-bar-2 relative group cursor-pointer hover:brightness-110"></div>
+                                </div>
+                            </div>
+
+                            <!-- Bar 3 -->
+                            <div class="flex items-center z-10 relative">
+                                <div class="w-32 text-right pr-4 text-xs font-bold text-slate-600">
+                                    <span data-lang="en">Name Change</span><span data-lang="th">ขอเปลี่ยนชื่อ-สกุล</span>
+                                </div>
+                                <div class="flex-1 h-6 bg-slate-100 rounded-r-md">
+                                    <div class="h-full bg-[#3b82f6] rounded-r-md mockup-bar mockup-bar-3 relative group cursor-pointer hover:brightness-110"></div>
+                                </div>
+                            </div>
+
+                            <!-- Bar 4 -->
+                            <div class="flex items-center z-10 relative">
+                                <div class="w-32 text-right pr-4 text-xs font-bold text-slate-600">
+                                    <span data-lang="en">User Behavior</span><span data-lang="th">รีพอร์ตพฤติกรรมผู้ใช้</span>
+                                </div>
+                                <div class="flex-1 h-6 bg-slate-100 rounded-r-md">
+                                    <div class="h-full bg-[#f97316] rounded-r-md mockup-bar mockup-bar-4 relative group cursor-pointer hover:brightness-110"></div>
+                                </div>
+                            </div>
+
+                            <!-- Bar 5 -->
+                            <div class="flex items-center z-10 relative mb-2">
+                                <div class="w-32 text-right pr-4 text-xs font-bold text-slate-600">
+                                    <span data-lang="en">System Bug</span><span data-lang="th">แจ้งปัญหาระบบ/บั๊ก</span>
+                                </div>
+                                <div class="flex-1 h-6 bg-slate-100 rounded-r-md">
+                                    <div class="h-full bg-[#8b5cf6] rounded-r-md mockup-bar mockup-bar-5 relative group cursor-pointer hover:brightness-110"></div>
+                                </div>
+                            </div>
+                            <div class="h-5"></div>
+                        </div>
+                    </div>
+
+                    <!-- Donut Chart Card -->
+                    <div class="bg-white rounded-xl p-6 border border-slate-200 shadow-sm flex flex-col">
+                        <div class="flex items-center mb-6 border-l-4 border-emerald-500 pl-3">
+                            <div>
+                                <h3 class="font-bold text-slate-800 text-lg leading-tight">
+                                    <span data-lang="en">User Proportion by Account Status</span><span data-lang="th">สัดส่วนผู้ใช้งานแยกตามสถานะบัญชี</span>
+                                </h3>
+                                <p class="text-xs text-slate-500 mt-1">
+                                    <span data-lang="en">System auto-locks OVERDUE users pending verification</span><span data-lang="th">ระบบจะล็อกผู้ใช้ OVERDUE อัตโนมัติเพื่อรอการยืนยัน</span>
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="flex-1 flex flex-col items-center justify-center">
+                            <!-- Animated Donut -->
+                            <div class="w-56 h-56 donut-chart relative flex items-center justify-center my-4 shadow-[0_0_20px_rgba(0,0,0,0.05)]">
+                                <!-- Inner Hole -->
+                                <div class="w-40 h-40 bg-white rounded-full flex flex-col items-center justify-center shadow-inner absolute z-10">
+                                    <span class="text-3xl font-black text-slate-800">4k+</span>
+                                    <span class="text-xs font-bold text-slate-400">USERS</span>
+                                </div>
+                            </div>
+
+                            <!-- Legend -->
+                            <div class="flex flex-wrap justify-center gap-3 mt-6 w-full max-w-sm">
+                                <div class="flex items-center bg-slate-50 px-3 py-1.5 rounded-md border border-slate-100 text-[10px] font-bold text-slate-600">
+                                    <span class="w-2.5 h-2.5 rounded-full bg-[#10b981] mr-2"></span> ACTIVE (ปกติ)
+                                </div>
+                                <div class="flex items-center bg-slate-50 px-3 py-1.5 rounded-md border border-slate-100 text-[10px] font-bold text-slate-600">
+                                    <span class="w-2.5 h-2.5 rounded-full bg-[#f59e0b] mr-2"></span> OVERDUE (เกินหลักสูตร)
+                                </div>
+                                <div class="flex items-center bg-slate-50 px-3 py-1.5 rounded-md border border-slate-100 text-[10px] font-bold text-slate-600">
+                                    <span class="w-2.5 h-2.5 rounded-full bg-[#6b7280] mr-2"></span> GRADUATED (จบแล้ว)
+                                </div>
+                                <div class="flex items-center bg-slate-50 px-3 py-1.5 rounded-md border border-slate-100 text-[10px] font-bold text-slate-600">
+                                    <span class="w-2.5 h-2.5 rounded-full bg-[#ef4444] mr-2"></span> SUSPENDED (ระงับบัญชี)
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- Auth Test Interactive Modal -->
+    <div id="auth-test-modal" class="fixed inset-0 z-[60] flex items-center justify-center bg-slate-900/90 p-4">
+        <div id="auth-card" class="bg-slate-800 border border-slate-700 rounded-2xl w-full max-w-sm p-8 shadow-[0_0_40px_rgba(0,0,0,0.5)] relative">
+            <button onclick="closeAuthTest()" class="absolute top-4 right-4 w-8 h-8 rounded-full hover:bg-slate-700 text-slate-400 hover:text-white transition flex items-center justify-center">
+                <i class="fas fa-times"></i>
+            </button>
+            
+            <!-- Input View -->
+            <div id="auth-input-view">
+                <div class="text-center mb-6 mt-2">
+                    <i class="fab fa-google text-4xl text-white mb-4"></i>
+                    <h3 class="text-xl font-medium text-white">
+                        <span data-lang="en">Choose an account</span><span data-lang="th">เลือกบัญชี</span>
+                    </h3>
+                    <p class="text-sm text-slate-400 mt-2">
+                        <span data-lang="en">to continue to KMUTNB Connect</span><span data-lang="th">เพื่อไปยัง KMUTNB Connect</span>
+                    </p>
+                </div>
+                <div class="mb-4 space-y-3">
+                    
+                    <!-- Account Option 1 (Success) -->
+                    <button onclick="simulateAuth('s6404062663258@email.kmutnb.ac.th')" class="w-full bg-slate-900/50 hover:bg-slate-700 border border-slate-600 rounded-xl p-3 flex items-center transition-all text-left group">
+                        <div class="w-10 h-10 rounded-full bg-emerald-600 flex items-center justify-center text-white font-bold mr-3 shadow-inner">W</div>
+                        <div>
+                            <p class="text-sm font-bold text-white group-hover:text-blue-400 transition-colors">Wannarat S.</p>
+                            <p class="text-[11px] text-slate-400 font-mono mt-0.5">s6404062663258@email.kmutnb.ac.th</p>
+                        </div>
+                    </button>
+                    
+                    <!-- Account Option 2 (Admin) -->
+                    <button onclick="simulateAuth('s6604062661041@email.kmutnb.ac.th')" class="w-full bg-slate-900/50 hover:bg-slate-700 border border-slate-600 rounded-xl p-3 flex items-center transition-all text-left group">
+                        <div class="w-10 h-10 rounded-full bg-red-600 flex items-center justify-center text-white font-bold mr-3 shadow-inner">N</div>
+                        <div>
+                            <p class="text-sm font-bold text-white group-hover:text-blue-400 transition-colors">Nisara K.</p>
+                            <p class="text-[11px] text-slate-400 font-mono mt-0.5">s6604062661041@email.kmutnb.ac.th</p>
+                        </div>
+                    </button>
+
+                    <!-- Account Option 3 (Fail) -->
+                    <button onclick="simulateAuth('example@gmail.com')" class="w-full bg-slate-900/50 hover:bg-slate-700 border border-slate-600 rounded-xl p-3 flex items-center transition-all text-left group">
+                        <div class="w-10 h-10 rounded-full bg-red-600 flex items-center justify-center text-white font-bold mr-3 shadow-inner">E</div>
+                        <div>
+                            <p class="text-sm font-bold text-white group-hover:text-blue-400 transition-colors">Example User</p>
+                            <p class="text-[11px] text-slate-400 font-mono mt-0.5">example@gmail.com</p>
+                        </div>
+                    </button>
+                    
+                    <p id="auth-error-msg" class="text-red-400 text-xs mt-2 hidden flex items-center"></p>
+                </div>
+                <div class="flex justify-center mt-6 border-t border-slate-700 pt-4">
+                    <button type="button" class="text-slate-400 text-sm font-medium hover:text-white transition-colors" onclick="closeAuthTest()">
+                        <span data-lang="en">Cancel sign-in</span><span data-lang="th">ยกเลิกการเข้าสู่ระบบ</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Loading View -->
+            <div id="auth-loading-view" class="hidden flex-col items-center justify-center py-12">
+                <div class="loader-spinner mb-4"></div>
+                <p class="text-sm text-slate-300 font-medium animate-pulse">
+                    <span data-lang="en">Checking domain permissions...</span><span data-lang="th">กำลังตรวจสอบสิทธิ์โดเมน...</span>
+                </p>
+            </div>
+
+            <!-- Result View -->
+            <div id="auth-result-view" class="hidden text-center py-6">
+                <i id="auth-result-icon"></i>
+                <h3 id="auth-result-title" class="text-xl font-bold text-white mb-2"></h3>
+                <div id="auth-result-desc" class="text-sm text-slate-400"></div>
+                <button onclick="resetAuthTest()" class="mt-8 px-6 py-2 bg-slate-700 hover:bg-slate-600 text-white rounded-lg text-sm font-medium transition-colors">
+                    <span data-lang="en">Try Again</span><span data-lang="th">ลองอีกครั้ง</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
     <script>
         // Language Toggle Logic
         let currentLang = 'en'; // Set Default to English
@@ -1136,6 +1470,67 @@
 
         // Initialize button states
         switchSlide(1);
+
+        // Mockup Modal Logic
+        function toggleMockup() {
+            const modal = document.getElementById('mockup-modal');
+            modal.classList.toggle('show');
+        }
+
+        // Auth Test Logic
+        function openAuthTest() {
+            document.getElementById('auth-test-modal').classList.add('show');
+            resetAuthTest();
+        }
+
+        function closeAuthTest() {
+            document.getElementById('auth-test-modal').classList.remove('show');
+        }
+
+        function resetAuthTest() {
+            document.getElementById('auth-input-view').style.display = 'block';
+            document.getElementById('auth-loading-view').style.display = 'none';
+            document.getElementById('auth-result-view').style.display = 'none';
+            document.getElementById('auth-error-msg').classList.add('hidden');
+            document.getElementById('auth-card').classList.remove('animate-shake');
+        }
+
+        function simulateAuth(email) {
+            const authCard = document.getElementById('auth-card');
+            
+            // Show loading phase
+            document.getElementById('auth-input-view').style.display = 'none';
+            document.getElementById('auth-loading-view').style.display = 'flex';
+
+            // Simulate Network Delay (1.5 seconds)
+            setTimeout(() => {
+                document.getElementById('auth-loading-view').style.display = 'none';
+                const resultView = document.getElementById('auth-result-view');
+                const resultIcon = document.getElementById('auth-result-icon');
+                const resultTitle = document.getElementById('auth-result-title');
+                const resultDesc = document.getElementById('auth-result-desc');
+                
+                resultView.style.display = 'block';
+                resultView.className = 'text-center animate-[fadeIn_0.5s_ease-out]';
+
+                // Check Domain
+                if (email.endsWith('@kmutnb.ac.th') || email.endsWith('@email.kmutnb.ac.th')) {
+                    // Success State
+                    resultIcon.className = 'fas fa-check-circle text-6xl text-emerald-500 mb-4 animate-[bounce_1s_ease-in-out]';
+                    resultTitle.innerHTML = `<span data-lang="en">Sign-In Successful!</span><span data-lang="th">เข้าสู่ระบบสำเร็จ!</span>`;
+                    resultDesc.innerHTML = `<span data-lang="en">Welcome Student<br><span class="text-emerald-400 font-mono mt-2 inline-block">${email}</span></span><span data-lang="th">ยินดีต้อนรับนักศึกษา<br><span class="text-emerald-400 font-mono mt-2 inline-block">${email}</span></span>`;
+                } else {
+                    // Fail State
+                    resultIcon.className = 'fas fa-times-circle text-6xl text-red-500 mb-4 animate-[pulse_1s_ease-in-out]';
+                    resultTitle.innerHTML = `<span data-lang="en">Access Denied</span><span data-lang="th">การเข้าถึงถูกปฏิเสธ</span>`;
+                    resultDesc.innerHTML = `<span data-lang="en">Email <span class="text-red-400 font-mono">${email}</span> is not allowed.<br>Please use a university email (@kmutnb.ac.th)</span><span data-lang="th">อีเมล <span class="text-red-400 font-mono">${email}</span> ไม่ได้รับอนุญาต<br>กรุณาใช้อีเมลของมหาวิทยาลัย (@kmutnb.ac.th)</span>`;
+                    
+                    authCard.classList.remove('animate-shake');
+                    void authCard.offsetWidth;
+                    authCard.classList.add('animate-shake'); // Shake on error
+                }
+            }, 1500);
+        }
 
     </script>
 </body>
