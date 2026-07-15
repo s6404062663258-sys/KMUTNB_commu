@@ -7,8 +7,9 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
-        body { font-family: 'Inter', sans-serif; background-color: #0f172a; color: #f8fafc; }
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Noto+Sans+Thai:wght@300;400;500;600;700&display=swap');
+        
+        body { font-family: 'Inter', 'Noto Sans Thai', sans-serif; background-color: #0f172a; color: #f8fafc; }
         .dashboard-card { background-color: #1e293b; border: 1px solid #334155; border-radius: 0.75rem; padding: 1.5rem; }
         .glass-panel { background: rgba(30, 41, 59, 0.7); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.1); }
         .slide { display: none; animation: fadeIn 0.3s ease-in-out; }
@@ -20,9 +21,13 @@
         ::-webkit-scrollbar-track { background: #0f172a; }
         ::-webkit-scrollbar-thumb { background: #334155; border-radius: 4px; }
         ::-webkit-scrollbar-thumb:hover { background: #475569; }
+
+        /* Language Toggle Logic */
+        body.th-mode [data-lang="en"] { display: none !important; }
+        body.en-mode [data-lang="th"] { display: none !important; }
     </style>
 </head>
-<body class="h-screen flex overflow-hidden">
+<body class="h-screen flex overflow-hidden en-mode">
 
     <!-- Sidebar Navigation -->
     <aside class="w-64 bg-slate-900 border-r border-slate-800 flex flex-col h-full flex-shrink-0 z-20">
@@ -37,14 +42,17 @@
         </nav>
         <div class="p-4 border-t border-slate-800 flex justify-between gap-2">
             <button id="prev-btn" onclick="prevSlide()" class="flex-1 py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded text-sm transition flex items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed">
-                <i class="fas fa-chevron-left mr-2"></i> Prev
+                <i class="fas fa-chevron-left mr-2"></i> 
+                <span data-lang="en">Prev</span><span data-lang="th">ก่อนหน้า</span>
             </button>
             <button id="next-btn" onclick="nextSlide()" class="flex-1 py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded text-sm transition flex items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed">
-                Next <i class="fas fa-chevron-right ml-2"></i>
+                <span data-lang="en">Next</span><span data-lang="th">ถัดไป</span> 
+                <i class="fas fa-chevron-right ml-2"></i>
             </button>
         </div>
         <div class="p-4 border-t border-slate-800 text-xs text-slate-500">
-            <p>Presented By:</p>
+            <p data-lang="en">Presented By:</p>
+            <p data-lang="th">นำเสนอโดย:</p>
             <p class="text-slate-300">Nisara K. (6604062661041)</p>
             <p class="text-slate-300">Wannarat S. (6404062663258)</p>
         </div>
@@ -55,10 +63,18 @@
         
         <!-- Topbar -->
         <header class="h-16 glass-panel border-b border-slate-800 flex items-center justify-between px-6 z-10">
-            <h2 id="current-slide-title" class="text-lg font-semibold text-slate-200">System Overview</h2>
+            <h2 id="current-slide-title" class="text-lg font-semibold text-slate-200">ภาพรวมและขั้นตอน</h2>
             <div class="flex items-center space-x-4">
+                <!-- Language Toggle Button -->
+                <button onclick="toggleLanguage()" class="px-3 py-1.5 bg-indigo-900/50 hover:bg-indigo-800 text-indigo-300 border border-indigo-700/50 rounded-md text-xs font-bold transition-all flex items-center cursor-pointer">
+                    <i class="fas fa-language text-lg mr-2"></i>
+                    <span data-lang="en">Switch to TH</span>
+                    <span data-lang="th">Switch to EN</span>
+                </button>
+
                 <span class="px-3 py-1 bg-cyan-900/50 text-cyan-400 border border-cyan-800 rounded-full text-xs font-medium flex items-center">
-                    <span class="w-2 h-2 bg-cyan-400 rounded-full mr-2 animate-pulse"></span> System Live
+                    <span class="w-2 h-2 bg-cyan-400 rounded-full mr-2 animate-pulse"></span> 
+                    <span data-lang="en">System Live</span><span data-lang="th">ระบบทำงานปกติ</span>
                 </span>
                 <div class="w-8 h-8 rounded-full bg-gradient-to-tr from-blue-500 to-purple-500 flex items-center justify-center border-2 border-slate-700">
                     <i class="fas fa-user text-xs"></i>
@@ -66,7 +82,6 @@
             </div>
         </header>
 
-        <!-- Dashboard Content / Slides -->
         <div class="flex-1 overflow-y-auto p-8 relative">
             
             <!-- Slide 1: Cover -->
@@ -76,20 +91,28 @@
                         <i class="fas fa-globe text-9xl"></i>
                     </div>
                     <h1 class="text-4xl font-bold text-white mb-2">KMUTNB Student Connect</h1>
-                    <h3 class="text-xl text-cyan-400 mb-4">Online Community and Activity Matching Platform for Students</h3>
+                    <h3 class="text-xl text-cyan-400 mb-4">
+                        <span data-lang="en">Online Community and Activity Matching Platform for Students</span>
+                        <span data-lang="th">คอมมูนิตี้และระบบจับคู่กิจกรรมสำหรับนักศึกษา มจพ.</span>
+                    </h3>
                     <p class="text-slate-300 max-w-2xl text-sm leading-relaxed mb-6">
-                        Verify securely with a University Google account. Discover information, create activities, find peers, and communicate safely. Connect, exchange ideas, and collaborate on projects, study sessions, sports, and university events.
+                        <span data-lang="en">Verify securely with a University Google account. Discover information, create activities, find peers, and communicate safely. Connect, exchange ideas, and collaborate on projects, study sessions, sports, and university events.</span>
+                        <span data-lang="th">ยืนยันตัวตนอย่างปลอดภัยด้วยบัญชี Google ของมหาวิทยาลัย ค้นหาข้อมูล สร้างกิจกรรม หาเพื่อนร่วมกิจกรรม และแชทในกิจกรรมอย่างปลอดภัย เชื่อมต่อ แลกเปลี่ยน และสร้างกิจกรรมร่วมกัน ตั้งกระทู้ หาเพื่อนทำโปรเจกต์ ติวหนังสือ เล่นกีฬา และเข้าร่วมกิจกรรมภายในมหาวิทยาลัย</span>
                     </p>
                     <div class="flex space-x-4">
                         <button class="px-4 py-2 bg-white text-slate-900 rounded-md font-semibold text-sm flex items-center">
-                            <i class="fab fa-google mr-2 text-red-500"></i> Continue with Google
+                            <i class="fab fa-google mr-2 text-red-500"></i> 
+                            <span data-lang="en">Continue with Google</span>
+                            <span data-lang="th">ดำเนินการต่อด้วย Google</span>
                         </button>
                     </div>
                 </div>
 
                 <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
                     <div class="dashboard-card">
-                        <h4 class="text-sm font-semibold text-slate-400 mb-4 uppercase tracking-wider">Main Workflow</h4>
+                        <h4 class="text-sm font-semibold text-slate-400 mb-4 uppercase tracking-wider">
+                            <span data-lang="en">Main Workflow</span><span data-lang="th">ขั้นตอนการทำงานหลัก</span>
+                        </h4>
                         <div class="flex flex-wrap gap-2 text-xs font-medium text-slate-300">
                             <span class="bg-slate-700 px-2 py-1 rounded">Sign-In</span><i class="fas fa-arrow-right mt-1 text-slate-500"></i>
                             <span class="bg-slate-700 px-2 py-1 rounded">Validation</span><i class="fas fa-arrow-right mt-1 text-slate-500"></i>
@@ -103,7 +126,9 @@
                         </div>
                     </div>
                     <div class="dashboard-card border-l-4 border-l-red-500">
-                        <h4 class="text-sm font-semibold text-slate-400 mb-4 uppercase tracking-wider">Safety Workflow</h4>
+                        <h4 class="text-sm font-semibold text-slate-400 mb-4 uppercase tracking-wider">
+                            <span data-lang="en">Safety Workflow</span><span data-lang="th">ขั้นตอนด้านความปลอดภัย</span>
+                        </h4>
                         <div class="flex flex-wrap gap-2 text-xs font-medium text-slate-300">
                             <span class="bg-red-900/50 text-red-300 px-2 py-1 rounded">Report</span><i class="fas fa-arrow-right mt-1 text-slate-500"></i>
                             <span class="bg-slate-700 px-2 py-1 rounded">Admin Review</span><i class="fas fa-arrow-right mt-1 text-slate-500"></i>
@@ -117,8 +142,14 @@
             <!-- Slide 2: Problem Statement -->
             <div id="slide-2" class="slide space-y-6">
                 <div class="text-center mb-8">
-                    <h2 class="text-2xl font-bold text-white">Problem Statement</h2>
-                    <p class="text-slate-400 mt-2">Students lack an effective way to discover and join university activities that match their interests and skills.</p>
+                    <h2 class="text-2xl font-bold text-white">
+                        <span data-lang="en">Problem Statement</span>
+                        <span data-lang="th">ปัญหาที่พบ (Problem Statement)</span>
+                    </h2>
+                    <p class="text-slate-400 mt-2">
+                        <span data-lang="en">Students lack an effective way to discover and join university activities that match their interests and skills.</span>
+                        <span data-lang="th">นักศึกษาขาดช่องทางที่มีประสิทธิภาพในการค้นหาและเข้าร่วมกิจกรรมภายในมหาวิทยาลัย ที่ตรงกับความสนใจและทักษะของตนเอง</span>
+                    </p>
                 </div>
                 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -128,8 +159,14 @@
                                 <i class="fas fa-user-shield text-xl"></i>
                             </div>
                             <div>
-                                <h3 class="font-semibold text-lg text-white mb-2">Lack of Trust</h3>
-                                <p class="text-slate-400 text-sm">Public social media groups do not verify users through university email accounts. The identity of posters and the reliability of shared information cannot always be confirmed.</p>
+                                <h3 class="font-semibold text-lg text-white mb-2">
+                                    <span data-lang="en">Lack of Trust</span>
+                                    <span data-lang="th">ขาดความน่าเชื่อถือ</span>
+                                </h3>
+                                <p class="text-slate-400 text-sm">
+                                    <span data-lang="en">Public social media groups do not verify users through university email accounts. The identity of posters and the reliability of shared information cannot always be confirmed.</span>
+                                    <span data-lang="th">กลุ่มโซเชียลมีเดียสาธารณะไม่มีการยืนยันตัวตนด้วยอีเมลมหาวิทยาลัย ทำให้ไม่สามารถยืนยันตัวตนของผู้โพสต์ และไม่สามารถรับประกันความน่าเชื่อถือของข้อมูลได้เสมอไป</span>
+                                </p>
                             </div>
                         </div>
                     </div>
@@ -140,8 +177,14 @@
                                 <i class="fas fa-list-ul text-xl"></i>
                             </div>
                             <div>
-                                <h3 class="font-semibold text-lg text-white mb-2">Unorganized Content</h3>
-                                <p class="text-slate-400 text-sm">Different types of posts are mixed in a single feed without clear categories, making relevant information difficult to find.</p>
+                                <h3 class="font-semibold text-lg text-white mb-2">
+                                    <span data-lang="en">Unorganized Content</span>
+                                    <span data-lang="th">ข้อมูลไม่เป็นระเบียบ</span>
+                                </h3>
+                                <p class="text-slate-400 text-sm">
+                                    <span data-lang="en">Different types of posts are mixed in a single feed without clear categories, making relevant information difficult to find.</span>
+                                    <span data-lang="th">โพสต์ประเภทต่างๆ ถูกนำมารวมอยู่ในฟีดเดียวกันโดยไม่มีการแยกหมวดหมู่ที่ชัดเจน ทำให้ค้นหาข้อมูลที่ต้องการและเกี่ยวข้องได้ยาก</span>
+                                </p>
                             </div>
                         </div>
                     </div>
@@ -152,8 +195,14 @@
                                 <i class="fas fa-users-slash text-xl"></i>
                             </div>
                             <div>
-                                <h3 class="font-semibold text-lg text-white mb-2">Difficulty Finding Partners</h3>
-                                <p class="text-slate-400 text-sm">Posts seeking activity participants are mixed with general community posts, making activities difficult to discover and manage.</p>
+                                <h3 class="font-semibold text-lg text-white mb-2">
+                                    <span data-lang="en">Difficulty Finding Partners</span>
+                                    <span data-lang="th">หาเพื่อนร่วมกิจกรรมยาก</span>
+                                </h3>
+                                <p class="text-slate-400 text-sm">
+                                    <span data-lang="en">Posts seeking activity participants are mixed with general community posts, making activities difficult to discover and manage.</span>
+                                    <span data-lang="th">โพสต์หาเพื่อนร่วมกิจกรรมปะปนกับโพสต์พูดคุยในคอมมูนิตี้ทั่วไป ทำให้โพสต์กิจกรรมถูกกลืนหาย ค้นพบยาก และจัดการได้ยาก</span>
+                                </p>
                             </div>
                         </div>
                     </div>
@@ -164,8 +213,14 @@
                                 <i class="fas fa-project-diagram text-xl"></i>
                             </div>
                             <div>
-                                <h3 class="font-semibold text-lg text-white mb-2">No Complete Workflow</h3>
-                                <p class="text-slate-400 text-sm">Existing social media groups lack a structured process for activity recommendations, join requests, approvals, membership management, and activity-specific communication.</p>
+                                <h3 class="font-semibold text-lg text-white mb-2">
+                                    <span data-lang="en">No Complete Workflow</span>
+                                    <span data-lang="th">ขาดระบบจัดการกิจกรรมที่ครบวงจร</span>
+                                </h3>
+                                <p class="text-slate-400 text-sm">
+                                    <span data-lang="en">Existing social media groups lack a structured process for activity recommendations, join requests, approvals, membership management, and activity-specific communication.</span>
+                                    <span data-lang="th">กลุ่มโซเชียลที่มีอยู่ไม่มีกระบวนการทำงานที่เป็นระบบ ตั้งแต่การแนะนำกิจกรรม ส่งคำขอเข้าร่วม อนุมัติสิทธิ์ จัดการสมาชิก ไปจนถึงการแชทพูดคุยเฉพาะกลุ่ม</span>
+                                </p>
                             </div>
                         </div>
                     </div>
@@ -174,79 +229,119 @@
 
             <!-- Slide 3: Objectives -->
             <div id="slide-3" class="slide space-y-6">
-                <h2 class="text-2xl font-bold text-white mb-6">Project Objectives</h2>
+                <h2 class="text-2xl font-bold text-white mb-6">
+                    <span data-lang="en">Project Objectives</span>
+                    <span data-lang="th">วัตถุประสงค์ของโครงการ</span>
+                </h2>
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                    <!-- Objective Cards -->
                     <div class="dashboard-card flex flex-col justify-center text-center group hover:bg-slate-800 transition">
                         <i class="fas fa-layer-group text-4xl text-blue-400 mb-4 group-hover:scale-110 transition duration-300"></i>
-                        <p class="text-sm text-slate-200">Build a categorized community for verified students.</p>
+                        <p class="text-sm text-slate-200">
+                            <span data-lang="en">Build a categorized community for verified students.</span>
+                            <span data-lang="th">สร้างคอมมูนิตี้แบบแยกหมวดหมู่ สำหรับนักศึกษาที่ยืนยันตัวตนแล้ว</span>
+                        </p>
                     </div>
                     <div class="dashboard-card flex flex-col justify-center text-center group hover:bg-slate-800 transition">
                         <i class="fas fa-tasks text-4xl text-emerald-400 mb-4 group-hover:scale-110 transition duration-300"></i>
-                        <p class="text-sm text-slate-200">Support the creation and management of university-related activities.</p>
+                        <p class="text-sm text-slate-200">
+                            <span data-lang="en">Support the creation and management of university-related activities.</span>
+                            <span data-lang="th">รองรับการสร้างและจัดการกิจกรรมที่เกี่ยวข้องกับมหาวิทยาลัย</span>
+                        </p>
                     </div>
                     <div class="dashboard-card flex flex-col justify-center text-center group hover:bg-slate-800 transition">
                         <i class="fas fa-robot text-4xl text-purple-400 mb-4 group-hover:scale-110 transition duration-300"></i>
-                        <p class="text-sm text-slate-200">Recommend activities using explainable Hybrid Matching.</p>
+                        <p class="text-sm text-slate-200">
+                            <span data-lang="en">Recommend activities using explainable Hybrid Matching.</span>
+                            <span data-lang="th">แนะนำกิจกรรมด้วยระบบ Hybrid Matching ที่สามารถอธิบายเหตุผลได้</span>
+                        </p>
                     </div>
                     <div class="dashboard-card flex flex-col justify-center text-center group hover:bg-slate-800 transition">
                         <i class="fas fa-link text-4xl text-cyan-400 mb-4 group-hover:scale-110 transition duration-300"></i>
-                        <p class="text-sm text-slate-200">Connect requests, approvals, membership, and activity chat.</p>
+                        <p class="text-sm text-slate-200">
+                            <span data-lang="en">Connect requests, approvals, membership, and activity chat.</span>
+                            <span data-lang="th">เชื่อมต่อระบบคำขอเข้าร่วม การอนุมัติ สมาชิก และแชทกิจกรรมเข้าด้วยกัน</span>
+                        </p>
                     </div>
                     <div class="dashboard-card flex flex-col justify-center text-center group hover:bg-slate-800 transition">
                         <i class="fas fa-user-secret text-4xl text-slate-400 mb-4 group-hover:scale-110 transition duration-300"></i>
-                        <p class="text-sm text-slate-200">Support accountable anonymous posting.</p>
+                        <p class="text-sm text-slate-200">
+                            <span data-lang="en">Support accountable anonymous posting.</span>
+                            <span data-lang="th">รองรับการตั้งโพสต์แบบไม่ระบุตัวตน ที่ตรวจสอบย้อนหลังได้เมื่อมีปัญหา</span>
+                        </p>
                     </div>
                     <div class="dashboard-card flex flex-col justify-center text-center group hover:bg-slate-800 transition">
                         <i class="fas fa-clipboard-check text-4xl text-orange-400 mb-4 group-hover:scale-110 transition duration-300"></i>
-                        <p class="text-sm text-slate-200">Provide reporting, admin review, and moderation records.</p>
+                        <p class="text-sm text-slate-200">
+                            <span data-lang="en">Provide reporting, admin review, and moderation records.</span>
+                            <span data-lang="th">มีระบบรายงานปัญหา การตรวจสอบโดยแอดมิน และบันทึกประวัติ (Audit Log)</span>
+                        </p>
                     </div>
                 </div>
             </div>
 
             <!-- Slide 4: Target Users -->
             <div id="slide-4" class="slide space-y-6">
-                <p class="text-slate-400 mb-6">The system has two main user roles: Verified Student and Administrator. A Verified Student can act as both an activity participant and an activity organizer.</p>
+                <p class="text-slate-400 mb-6">
+                    <span data-lang="en">The system has two main user roles: Verified Student and Administrator. A Verified Student can act as both an activity participant and an activity organizer.</span>
+                    <span data-lang="th">ระบบมีผู้ใช้งานหลัก 2 บทบาท: นักศึกษาที่ยืนยันตัวตนแล้ว และ ผู้ดูแลระบบ โดยนักศึกษาสามารถเป็นได้ทั้งผู้เข้าร่วมและผู้สร้างกิจกรรม</span>
+                </p>
                 
                 <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                    <!-- Verified Student Role -->
                     <div class="lg:col-span-2 dashboard-card border-t-4 border-t-blue-500 relative">
                         <div class="absolute top-4 right-4 bg-blue-900/50 text-blue-400 px-3 py-1 rounded text-xs font-bold">01 PRIMARY USER</div>
                         <h3 class="text-xl font-bold text-white mb-4 flex items-center">
-                            <i class="fas fa-user-graduate mr-3 text-blue-400"></i> Verified Students
+                            <i class="fas fa-user-graduate mr-3 text-blue-400"></i> 
+                            <span data-lang="en">Verified Students</span>
+                            <span data-lang="th">นักศึกษาที่ยืนยันตัวตนแล้ว</span>
                         </h3>
                         <div class="space-y-4">
                             <div class="bg-slate-900/50 p-4 rounded-lg border border-slate-700/50">
-                                <h4 class="text-sm font-semibold text-blue-300 mb-2"><i class="fas fa-users mr-2"></i>Community User</h4>
-                                <p class="text-xs text-slate-400">Creates profiles, browses categorized posts, creates normal or anonymous posts, comments, reports inappropriate content, and tracks report status.</p>
+                                <h4 class="text-sm font-semibold text-blue-300 mb-2"><i class="fas fa-users mr-2"></i>
+                                    <span data-lang="en">Community User</span><span data-lang="th">ผู้ใช้งานคอมมูนิตี้</span>
+                                </h4>
+                                <p class="text-xs text-slate-400">
+                                    <span data-lang="en">Creates profiles, browses categorized posts, creates normal or anonymous posts, comments, reports inappropriate content, and tracks report status.</span>
+                                    <span data-lang="th">สร้างโปรไฟล์ เลือกดูโพสต์ตามหมวดหมู่ สร้างโพสต์ปกติหรือแบบไม่ระบุตัวตน แสดงความคิดเห็น รายงานเนื้อหาที่ไม่เหมาะสม และติดตามสถานะการรายงาน</span>
+                                </p>
                             </div>
                             <div class="bg-slate-900/50 p-4 rounded-lg border border-slate-700/50">
-                                <h4 class="text-sm font-semibold text-emerald-300 mb-2"><i class="fas fa-running mr-2"></i>Activity Participant</h4>
-                                <p class="text-xs text-slate-400">Discovers activities, receives rule-based recommendations, views match reasons, requests to join, tracks request status, accesses activity chat after approval, and submits feedback.</p>
+                                <h4 class="text-sm font-semibold text-emerald-300 mb-2"><i class="fas fa-running mr-2"></i>
+                                    <span data-lang="en">Activity Participant</span><span data-lang="th">ผู้เข้าร่วมกิจกรรม</span>
+                                </h4>
+                                <p class="text-xs text-slate-400">
+                                    <span data-lang="en">Discovers activities, receives rule-based recommendations, views match reasons, requests to join, tracks request status, accesses activity chat after approval, and submits feedback.</span>
+                                    <span data-lang="th">ค้นหากิจกรรม รับการแนะนำกิจกรรมที่ตรงกับตนเอง ดูเหตุผลการจับคู่ ส่งคำขอเข้าร่วม ติดตามสถานะคำขอ เข้าถึงแชทกิจกรรมเมื่อได้รับอนุมัติ และประเมินผล</span>
+                                </p>
                             </div>
                             <div class="bg-slate-900/50 p-4 rounded-lg border border-slate-700/50">
-                                <h4 class="text-sm font-semibold text-purple-300 mb-2"><i class="fas fa-crown mr-2"></i>Activity Owner</h4>
-                                <p class="text-xs text-slate-400">Creates and manages activities, defines required interests and skills, reviews join requests, manages members, communicates through activity chat, completes activities, and reviews feedback.</p>
+                                <h4 class="text-sm font-semibold text-purple-300 mb-2"><i class="fas fa-crown mr-2"></i>
+                                    <span data-lang="en">Activity Owner</span><span data-lang="th">ผู้สร้างกิจกรรม</span>
+                                </h4>
+                                <p class="text-xs text-slate-400">
+                                    <span data-lang="en">Creates and manages activities, defines required interests and skills, reviews join requests, manages members, communicates through activity chat, completes activities, and reviews feedback.</span>
+                                    <span data-lang="th">สร้างและจัดการกิจกรรม กำหนดทักษะและความสนใจที่ต้องการ ตรวจสอบคำขอเข้าร่วม จัดการสมาชิก สื่อสารผ่านแชทกิจกรรม กดจบกิจกรรม และดูผลประเมิน</span>
+                                </p>
                             </div>
                         </div>
                     </div>
 
-                    <!-- Admin Role -->
                     <div class="dashboard-card border-t-4 border-t-red-500 relative">
                         <div class="absolute top-4 right-4 bg-red-900/50 text-red-400 px-3 py-1 rounded text-xs font-bold">02 ADMIN</div>
                         <h3 class="text-xl font-bold text-white mb-4 flex items-center">
-                            <i class="fas fa-shield-alt mr-3 text-red-400"></i> Administrator
+                            <i class="fas fa-shield-alt mr-3 text-red-400"></i> 
+                            <span data-lang="en">Administrator</span><span data-lang="th">ผู้ดูแลระบบ</span>
                         </h3>
                         <p class="text-sm text-slate-400 mb-4 leading-relaxed">
-                            An authorized user responsible for maintaining platform safety and integrity.
+                            <span data-lang="en">An authorized user responsible for maintaining platform safety and integrity.</span>
+                            <span data-lang="th">ผู้ใช้งานที่ได้รับสิทธิ์พิเศษ รับผิดชอบในการดูแลความปลอดภัยและความเรียบร้อยของแพลตฟอร์ม</span>
                         </p>
                         <ul class="text-xs text-slate-300 space-y-3">
-                            <li class="flex items-start"><i class="fas fa-check text-red-400 mt-0.5 mr-2"></i> Reviewing user reports</li>
-                            <li class="flex items-start"><i class="fas fa-check text-red-400 mt-0.5 mr-2"></i> Moderating content</li>
-                            <li class="flex items-start"><i class="fas fa-check text-red-400 mt-0.5 mr-2"></i> Managing report status</li>
-                            <li class="flex items-start"><i class="fas fa-check text-red-400 mt-0.5 mr-2"></i> Investigating anonymous posts (when permitted)</li>
-                            <li class="flex items-start"><i class="fas fa-check text-red-400 mt-0.5 mr-2"></i> Handling account restrictions</li>
-                            <li class="flex items-start"><i class="fas fa-check text-red-400 mt-0.5 mr-2"></i> Maintaining immutable audit logs</li>
+                            <li class="flex items-start"><i class="fas fa-check text-red-400 mt-0.5 mr-2"></i> <span data-lang="en">Reviewing user reports</span><span data-lang="th">ตรวจสอบรายงานจากผู้ใช้</span></li>
+                            <li class="flex items-start"><i class="fas fa-check text-red-400 mt-0.5 mr-2"></i> <span data-lang="en">Moderating content</span><span data-lang="th">จัดการและควบคุมเนื้อหา</span></li>
+                            <li class="flex items-start"><i class="fas fa-check text-red-400 mt-0.5 mr-2"></i> <span data-lang="en">Managing report status</span><span data-lang="th">อัปเดตสถานะการรายงานปัญหา</span></li>
+                            <li class="flex items-start"><i class="fas fa-check text-red-400 mt-0.5 mr-2"></i> <span data-lang="en">Investigating anonymous posts</span><span data-lang="th">ตรวจสอบโพสต์นิรนามเมื่อทำผิดกฎ</span></li>
+                            <li class="flex items-start"><i class="fas fa-check text-red-400 mt-0.5 mr-2"></i> <span data-lang="en">Handling account restrictions</span><span data-lang="th">จัดการสถานะและระงับบัญชีผู้ใช้</span></li>
+                            <li class="flex items-start"><i class="fas fa-check text-red-400 mt-0.5 mr-2"></i> <span data-lang="en">Maintaining immutable audit logs</span><span data-lang="th">ดูแลบันทึกประวัติการทำงาน (Audit Log)</span></li>
                         </ul>
                     </div>
                 </div>
@@ -255,51 +350,85 @@
             <!-- Slide 5: System Scope -->
             <div id="slide-5" class="slide space-y-6">
                 <div class="dashboard-card">
-                    <h3 class="text-lg font-semibold text-white mb-4">System Scope Configuration</h3>
+                    <h3 class="text-lg font-semibold text-white mb-4">
+                        <span data-lang="en">System Scope Configuration</span>
+                        <span data-lang="th">ขอบเขตของระบบ (System Scope)</span>
+                    </h3>
                     <div class="overflow-x-auto">
                         <table class="w-full text-sm text-left">
                             <thead class="text-xs text-slate-400 uppercase bg-slate-900 border-b border-slate-700">
                                 <tr>
-                                    <th class="px-4 py-3 rounded-tl-lg w-1/4">Parameter</th>
-                                    <th class="px-4 py-3 rounded-tr-lg">Definition / Scope</th>
+                                    <th class="px-4 py-3 rounded-tl-lg w-1/4">
+                                        <span data-lang="en">Parameter</span><span data-lang="th">หัวข้อ</span>
+                                    </th>
+                                    <th class="px-4 py-3 rounded-tr-lg">
+                                        <span data-lang="en">Definition / Scope</span><span data-lang="th">คำจำกัดความ / ขอบเขต</span>
+                                    </th>
                                 </tr>
                             </thead>
                             <tbody class="divide-y divide-slate-800 text-slate-300">
                                 <tr class="hover:bg-slate-800/50 transition">
                                     <td class="px-4 py-3 font-medium text-cyan-400">Platform</td>
-                                    <td class="px-4 py-3">Responsive Web Application (Supports Desktop & Mobile)</td>
+                                    <td class="px-4 py-3">
+                                        <span data-lang="en">Responsive Web Application (Supports Desktop & Mobile)</span>
+                                        <span data-lang="th">Responsive Web Application รองรับการทำงานทั้งบน Desktop และ Mobile</span>
+                                    </td>
                                 </tr>
                                 <tr class="hover:bg-slate-800/50 transition">
                                     <td class="px-4 py-3 font-medium text-cyan-400">Main Users</td>
-                                    <td class="px-4 py-3">Verified Student and Administrator</td>
+                                    <td class="px-4 py-3">
+                                        <span data-lang="en">Verified Student and Administrator</span>
+                                        <span data-lang="th">นักศึกษาที่ยืนยันตัวตนแล้ว (Verified Student) และผู้ดูแลระบบ (Administrator)</span>
+                                    </td>
                                 </tr>
                                 <tr class="hover:bg-slate-800/50 transition">
                                     <td class="px-4 py-3 font-medium text-cyan-400">Verified Student</td>
-                                    <td class="px-4 py-3">Can function as both an activity participant and an activity creator</td>
+                                    <td class="px-4 py-3">
+                                        <span data-lang="en">Can function as both an activity participant and an activity creator</span>
+                                        <span data-lang="th">สามารถเป็นได้ทั้งผู้เข้าร่วมกิจกรรม และผู้สร้างกิจกรรม</span>
+                                    </td>
                                 </tr>
                                 <tr class="hover:bg-slate-800/50 transition">
                                     <td class="px-4 py-3 font-medium text-cyan-400">Student Verification</td>
-                                    <td class="px-4 py-3">Login via Google OAuth, verified specifically against university email domain</td>
+                                    <td class="px-4 py-3">
+                                        <span data-lang="en">Login via Google OAuth, verified specifically against university email domain</span>
+                                        <span data-lang="th">เข้าสู่ระบบผ่าน Google OAuth และตรวจสอบเพื่ออนุญาตเฉพาะอีเมลโดเมนมหาวิทยาลัยเท่านั้น</span>
+                                    </td>
                                 </tr>
                                 <tr class="hover:bg-slate-800/50 transition">
                                     <td class="px-4 py-3 font-medium text-cyan-400">Community Scope</td>
-                                    <td class="px-4 py-3">Categorized student community, supporting both standard and Anonymous Posts</td>
+                                    <td class="px-4 py-3">
+                                        <span data-lang="en">Categorized student community, supporting both standard and Anonymous Posts</span>
+                                        <span data-lang="th">ชุมชนนักศึกษาแบบแบ่งหมวดหมู่ รองรับทั้งโพสต์ปกติและโพสต์แบบไม่ระบุตัวตน (Anonymous Post)</span>
+                                    </td>
                                 </tr>
                                 <tr class="hover:bg-slate-800/50 transition">
                                     <td class="px-4 py-3 font-medium text-cyan-400">Activity Scope</td>
-                                    <td class="px-4 py-3">Activities related to academics, projects, clubs, sports, volunteering, and university events</td>
+                                    <td class="px-4 py-3">
+                                        <span data-lang="en">Activities related to academics, projects, clubs, sports, volunteering, and university events</span>
+                                        <span data-lang="th">กิจกรรมที่เกี่ยวข้องกับการเรียน โปรเจกต์ ชมรม กีฬา จิตอาสา และงานของมหาวิทยาลัย</span>
+                                    </td>
                                 </tr>
                                 <tr class="hover:bg-slate-800/50 transition">
                                     <td class="px-4 py-3 font-medium text-purple-400">Matching Scope</td>
-                                    <td class="px-4 py-3">Recommends activities via <span class="bg-purple-900/50 px-2 py-0.5 rounded text-purple-300">Hybrid Matching</span> utilizing Skill, Interest, Major, Year, and Bio</td>
+                                    <td class="px-4 py-3">
+                                        <span data-lang="en">Recommends activities via <span class="bg-purple-900/50 px-2 py-0.5 rounded text-purple-300">Hybrid Matching</span> utilizing Skill, Interest, Major, Year, and Bio</span>
+                                        <span data-lang="th">แนะนำกิจกรรมด้วย <span class="bg-purple-900/50 px-2 py-0.5 rounded text-purple-300">Hybrid Matching</span> วิเคราะห์จาก Skill, Interest, Major, Year และ Bio</span>
+                                    </td>
                                 </tr>
                                 <tr class="hover:bg-slate-800/50 transition">
                                     <td class="px-4 py-3 font-medium text-cyan-400">Safety Scope</td>
-                                    <td class="px-4 py-3">Content scanning, issue reporting, Admin review, and Audit Log recording</td>
+                                    <td class="px-4 py-3">
+                                        <span data-lang="en">Content scanning, issue reporting, Admin review, and Audit Log recording</span>
+                                        <span data-lang="th">การสแกนข้อความ แจ้งรายงานปัญหา ตรวจสอบโดยแอดมิน และบันทึกประวัติลง Audit Log</span>
+                                    </td>
                                 </tr>
                                 <tr class="hover:bg-slate-800/50 transition">
                                     <td class="px-4 py-3 font-medium text-cyan-400">Language</td>
-                                    <td class="px-4 py-3">UI supports both Thai and English localization</td>
+                                    <td class="px-4 py-3">
+                                        <span data-lang="en">UI supports both Thai and English localization</span>
+                                        <span data-lang="th">ส่วนติดต่อผู้ใช้งาน (UI) รองรับการเปลี่ยนภาษาไทยและภาษาอังกฤษ</span>
+                                    </td>
                                 </tr>
                             </tbody>
                         </table>
@@ -309,108 +438,156 @@
 
             <!-- Slide 6: Core System Modules -->
             <div id="slide-6" class="slide space-y-6">
-                <p class="text-slate-400 mb-4">The system is organized into ten interconnected modules covering the complete user journey from verified access and community participation to activity matching, communication, reporting, and administration.</p>
+                <p class="text-slate-400 mb-4">
+                    <span data-lang="en">The system is organized into ten interconnected modules covering the complete user journey from verified access and community participation to activity matching, communication, reporting, and administration.</span>
+                    <span data-lang="th">ระบบถูกแบ่งออกเป็น 10 โมดูลหลักที่เชื่อมโยงกัน ครอบคลุมเส้นทางการใช้งานตั้งแต่การยืนยันตัวตน การใช้งานคอมมูนิตี้ การจับคู่กิจกรรม การสื่อสาร ไปจนถึงระบบรายงานและการจัดการโดยแอดมิน</span>
+                </p>
                 
                 <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-5 gap-4">
-                    <!-- Modules 1-10 as Widget Cards -->
                     <div class="dashboard-card p-4 hover:border-cyan-500 transition">
                         <div class="text-cyan-400 font-bold mb-2 flex justify-between"><span>01</span> <i class="fas fa-key"></i></div>
-                        <h4 class="text-sm font-semibold text-white mb-1">Identity & Access</h4>
-                        <p class="text-xs text-slate-400">Google Sign-In, email verification, domain validation, session control.</p>
+                        <h4 class="text-sm font-semibold text-white mb-1"><span data-lang="en">Identity & Access</span><span data-lang="th">การยืนยันและเข้าถึง</span></h4>
+                        <p class="text-xs text-slate-400">
+                            <span data-lang="en">Google Sign-In, email verification, domain validation, session control.</span>
+                            <span data-lang="th">Google Sign-In, ตรวจสอบอีเมลโดเมน, จัดการเซสชัน</span>
+                        </p>
                     </div>
                     <div class="dashboard-card p-4 hover:border-cyan-500 transition">
                         <div class="text-cyan-400 font-bold mb-2 flex justify-between"><span>02</span> <i class="fas fa-id-card"></i></div>
-                        <h4 class="text-sm font-semibold text-white mb-1">Student Profile</h4>
-                        <p class="text-xs text-slate-400">Profile data, interests, skills, and profile completeness tracking.</p>
+                        <h4 class="text-sm font-semibold text-white mb-1"><span data-lang="en">Student Profile</span><span data-lang="th">โปรไฟล์นักศึกษา</span></h4>
+                        <p class="text-xs text-slate-400">
+                            <span data-lang="en">Profile data, interests, skills, and profile completeness tracking.</span>
+                            <span data-lang="th">ข้อมูลโปรไฟล์ ความสนใจ ทักษะ และแถบความสมบูรณ์</span>
+                        </p>
                     </div>
                     <div class="dashboard-card p-4 hover:border-cyan-500 transition">
                         <div class="text-cyan-400 font-bold mb-2 flex justify-between"><span>03</span> <i class="fas fa-comments"></i></div>
-                        <h4 class="text-sm font-semibold text-white mb-1">Community Board</h4>
-                        <p class="text-xs text-slate-400">Categorized posts, advanced search, filters, and commenting system.</p>
+                        <h4 class="text-sm font-semibold text-white mb-1"><span data-lang="en">Community Board</span><span data-lang="th">กระดานคอมมูนิตี้</span></h4>
+                        <p class="text-xs text-slate-400">
+                            <span data-lang="en">Categorized posts, advanced search, filters, and commenting system.</span>
+                            <span data-lang="th">โพสต์แยกหมวดหมู่ ค้นหาขั้นสูง ตัวกรอง และระบบคอมเมนต์</span>
+                        </p>
                     </div>
                     <div class="dashboard-card p-4 hover:border-cyan-500 transition">
                         <div class="text-cyan-400 font-bold mb-2 flex justify-between"><span>04</span> <i class="fas fa-user-secret"></i></div>
-                        <h4 class="text-sm font-semibold text-white mb-1">Anonymous Posting</h4>
-                        <p class="text-xs text-slate-400">Public identity protection with strict administrative accountability.</p>
+                        <h4 class="text-sm font-semibold text-white mb-1"><span data-lang="en">Anonymous Posting</span><span data-lang="th">โพสต์นิรนาม</span></h4>
+                        <p class="text-xs text-slate-400">
+                            <span data-lang="en">Public identity protection with strict administrative accountability.</span>
+                            <span data-lang="th">ปกปิดตัวตนต่อสาธารณะ แต่ตรวจสอบย้อนหลังได้โดยแอดมิน</span>
+                        </p>
                     </div>
                     <div class="dashboard-card p-4 hover:border-cyan-500 transition">
                         <div class="text-cyan-400 font-bold mb-2 flex justify-between"><span>05</span> <i class="fas fa-calendar-alt"></i></div>
-                        <h4 class="text-sm font-semibold text-white mb-1">Activity Mgmt.</h4>
-                        <p class="text-xs text-slate-400">Create, edit, publish, and manage university-related activities.</p>
+                        <h4 class="text-sm font-semibold text-white mb-1"><span data-lang="en">Activity Mgmt.</span><span data-lang="th">จัดการกิจกรรม</span></h4>
+                        <p class="text-xs text-slate-400">
+                            <span data-lang="en">Create, edit, publish, and manage university-related activities.</span>
+                            <span data-lang="th">สร้าง แก้ไข เผยแพร่ และจัดการกิจกรรมภายในมหาวิทยาลัย</span>
+                        </p>
                     </div>
                     
                     <div class="dashboard-card p-4 hover:border-purple-500 transition border-l-2 border-l-purple-500">
                         <div class="text-purple-400 font-bold mb-2 flex justify-between"><span>06</span> <i class="fas fa-brain"></i></div>
-                        <h4 class="text-sm font-semibold text-white mb-1">Activity Matching</h4>
-                        <p class="text-xs text-slate-400">Filter, score, rank, and explain AI/Rule-based recommended activities.</p>
+                        <h4 class="text-sm font-semibold text-white mb-1"><span data-lang="en">Activity Matching</span><span data-lang="th">ระบบจับคู่กิจกรรม</span></h4>
+                        <p class="text-xs text-slate-400">
+                            <span data-lang="en">Filter, score, rank, and explain AI/Rule-based recommended activities.</span>
+                            <span data-lang="th">คัดกรอง ให้คะแนน จัดอันดับ และอธิบายเหตุผลที่แนะนำกิจกรรม</span>
+                        </p>
                     </div>
                     <div class="dashboard-card p-4 hover:border-emerald-500 transition">
                         <div class="text-emerald-400 font-bold mb-2 flex justify-between"><span>07</span> <i class="fas fa-hand-paper"></i></div>
-                        <h4 class="text-sm font-semibold text-white mb-1">Join Request</h4>
-                        <p class="text-xs text-slate-400">Submit, track, accept, reject, or cancel activity participation requests.</p>
+                        <h4 class="text-sm font-semibold text-white mb-1"><span data-lang="en">Join Request</span><span data-lang="th">คำขอเข้าร่วม</span></h4>
+                        <p class="text-xs text-slate-400">
+                            <span data-lang="en">Submit, track, accept, reject, or cancel activity participation requests.</span>
+                            <span data-lang="th">ส่งคำขอ ติดตามสถานะ อนุมัติ ปฏิเสธ หรือยกเลิกคำขอ</span>
+                        </p>
                     </div>
                     <div class="dashboard-card p-4 hover:border-emerald-500 transition">
                         <div class="text-emerald-400 font-bold mb-2 flex justify-between"><span>08</span> <i class="fas fa-users-cog"></i></div>
-                        <h4 class="text-sm font-semibold text-white mb-1">Membership & Chat</h4>
-                        <p class="text-xs text-slate-400">Create membership records and authorize secure activity-chat access.</p>
+                        <h4 class="text-sm font-semibold text-white mb-1"><span data-lang="en">Membership & Chat</span><span data-lang="th">สมาชิกและแชท</span></h4>
+                        <p class="text-xs text-slate-400">
+                            <span data-lang="en">Create membership records and authorize secure activity-chat access.</span>
+                            <span data-lang="th">จัดการฐานข้อมูลสมาชิก และให้สิทธิ์เข้าถึงห้องแชทเฉพาะกลุ่ม</span>
+                        </p>
                     </div>
                     <div class="dashboard-card p-4 hover:border-yellow-500 transition">
                         <div class="text-yellow-400 font-bold mb-2 flex justify-between"><span>09</span> <i class="fas fa-bell"></i></div>
-                        <h4 class="text-sm font-semibold text-white mb-1">Feedback & Notifs</h4>
-                        <p class="text-xs text-slate-400">Collect post-activity feedback and communicate status changes to users.</p>
+                        <h4 class="text-sm font-semibold text-white mb-1"><span data-lang="en">Feedback & Notifs</span><span data-lang="th">ประเมินและแจ้งเตือน</span></h4>
+                        <p class="text-xs text-slate-400">
+                            <span data-lang="en">Collect post-activity feedback and communicate status changes to users.</span>
+                            <span data-lang="th">เก็บผลประเมินหลังจบกิจกรรม และแจ้งเตือนสถานะให้ผู้ใช้ทราบ</span>
+                        </p>
                     </div>
                     <div class="dashboard-card p-4 hover:border-red-500 transition border-l-2 border-l-red-500">
                         <div class="text-red-400 font-bold mb-2 flex justify-between"><span>10</span> <i class="fas fa-gavel"></i></div>
-                        <h4 class="text-sm font-semibold text-white mb-1">Report & Moderation</h4>
-                        <p class="text-xs text-slate-400">Report queue, admin review interface, moderation actions, and audit log.</p>
+                        <h4 class="text-sm font-semibold text-white mb-1"><span data-lang="en">Report & Moderation</span><span data-lang="th">รายงานและดูแลระบบ</span></h4>
+                        <p class="text-xs text-slate-400">
+                            <span data-lang="en">Report queue, admin review interface, moderation actions, and audit log.</span>
+                            <span data-lang="th">คิวรายงานปัญหา หน้าจอแอดมิน จัดการเนื้อหา และเก็บ Audit Log</span>
+                        </p>
                     </div>
                 </div>
             </div>
 
             <!-- Slide 7: Auth Flow -->
             <div id="slide-7" class="slide space-y-6">
-                <h3 class="text-xl font-bold text-white mb-4">Authentication Flow</h3>
+                <h3 class="text-xl font-bold text-white mb-4">
+                    <span data-lang="en">Authentication Flow</span><span data-lang="th">ขั้นตอนการเข้าสู่ระบบ (Auth Flow)</span>
+                </h3>
                 
                 <div class="dashboard-card relative">
-                    <h4 class="text-sm text-slate-400 mb-6 border-b border-slate-700 pb-2">User Journey: Login -> Account Selection -> Validation</h4>
+                    <h4 class="text-sm text-slate-400 mb-6 border-b border-slate-700 pb-2">
+                        <span data-lang="en">User Journey: Login -> Account Selection -> Validation</span>
+                        <span data-lang="th">ลำดับการใช้งาน: ล็อกอิน -> เลือกบัญชี -> ตรวจสอบเงื่อนไข</span>
+                    </h4>
                     
                     <div class="flex flex-col md:flex-row items-center justify-between space-y-4 md:space-y-0 md:space-x-4">
-                        <!-- Step 1 -->
                         <div class="flex-1 bg-slate-800 p-4 rounded border border-slate-700 text-center relative w-full">
                             <div class="absolute -top-3 left-1/2 transform -translate-x-1/2 bg-blue-600 text-white w-6 h-6 rounded-full text-xs flex items-center justify-center font-bold">1</div>
                             <i class="fab fa-google text-2xl mb-2 text-slate-300"></i>
                             <h5 class="font-semibold text-sm text-white">Google OAuth</h5>
-                            <p class="text-xs text-slate-400 mt-1">Receive verified email from provider</p>
+                            <p class="text-xs text-slate-400 mt-1">
+                                <span data-lang="en">Receive verified email from provider</span>
+                                <span data-lang="th">รับ verified email จากผู้ให้บริการ</span>
+                            </p>
                         </div>
                         <i class="fas fa-chevron-right text-slate-600 hidden md:block"></i>
                         <i class="fas fa-chevron-down text-slate-600 md:hidden"></i>
                         
-                        <!-- Step 2 -->
                         <div class="flex-1 bg-slate-800 p-4 rounded border border-slate-700 text-center relative w-full">
                             <div class="absolute -top-3 left-1/2 transform -translate-x-1/2 bg-blue-600 text-white w-6 h-6 rounded-full text-xs flex items-center justify-center font-bold">2</div>
                             <i class="fas fa-at text-2xl mb-2 text-slate-300"></i>
-                            <h5 class="font-semibold text-sm text-white">Domain Check</h5>
-                            <p class="text-xs text-slate-400 mt-1">Must end with <br><span class="text-cyan-400 font-mono">@email.kmutnb.ac.th</span></p>
+                            <h5 class="font-semibold text-sm text-white">
+                                <span data-lang="en">Domain Check</span><span data-lang="th">ตรวจสอบโดเมน</span>
+                            </h5>
+                            <p class="text-xs text-slate-400 mt-1">
+                                <span data-lang="en">Must end with</span><span data-lang="th">ต้องลงท้ายด้วย</span> <br><span class="text-cyan-400 font-mono">@email.kmutnb.ac.th</span>
+                            </p>
                         </div>
                         <i class="fas fa-chevron-right text-slate-600 hidden md:block"></i>
                         <i class="fas fa-chevron-down text-slate-600 md:hidden"></i>
 
-                        <!-- Step 3 -->
                         <div class="flex-1 bg-slate-800 p-4 rounded border border-slate-700 text-center relative w-full">
                             <div class="absolute -top-3 left-1/2 transform -translate-x-1/2 bg-blue-600 text-white w-6 h-6 rounded-full text-xs flex items-center justify-center font-bold">3</div>
                             <i class="fas fa-fingerprint text-2xl mb-2 text-slate-300"></i>
-                            <h5 class="font-semibold text-sm text-white">Format Check</h5>
-                            <p class="text-xs text-slate-400 mt-1">Validate structure:<br><span class="text-cyan-400 font-mono">S + Student ID</span></p>
+                            <h5 class="font-semibold text-sm text-white">
+                                <span data-lang="en">Format Check</span><span data-lang="th">ตรวจสอบรูปแบบ</span>
+                            </h5>
+                            <p class="text-xs text-slate-400 mt-1">
+                                <span data-lang="en">Validate structure:</span><span data-lang="th">ตรวจรูปแบบ:</span><br><span class="text-cyan-400 font-mono">S + รหัสนักศึกษา</span>
+                            </p>
                         </div>
                         <i class="fas fa-chevron-right text-slate-600 hidden md:block"></i>
                         <i class="fas fa-chevron-down text-slate-600 md:hidden"></i>
 
-                        <!-- Step 4 -->
                         <div class="flex-1 bg-emerald-900/30 p-4 rounded border border-emerald-700 text-center relative w-full">
                             <div class="absolute -top-3 left-1/2 transform -translate-x-1/2 bg-emerald-600 text-white w-6 h-6 rounded-full text-xs flex items-center justify-center font-bold">4</div>
                             <i class="fas fa-user-check text-2xl mb-2 text-emerald-400"></i>
-                            <h5 class="font-semibold text-sm text-white">Provision Profile</h5>
-                            <p class="text-xs text-slate-400 mt-1">Create account & set <br><span class="text-emerald-400 font-mono">email_verified</span></p>
+                            <h5 class="font-semibold text-sm text-white">
+                                <span data-lang="en">Provision Profile</span><span data-lang="th">สร้างโปรไฟล์</span>
+                            </h5>
+                            <p class="text-xs text-slate-400 mt-1">
+                                <span data-lang="en">Create account & set</span><span data-lang="th">สร้างบัญชี & ตั้งสถานะ</span> <br><span class="text-emerald-400 font-mono">email_verified</span>
+                            </p>
                         </div>
                     </div>
                     
@@ -418,7 +595,10 @@
                     <div class="mt-6 bg-red-900/20 border border-red-800/50 p-4 rounded flex items-center text-sm">
                         <i class="fas fa-exclamation-triangle text-red-500 mr-3"></i>
                         <div>
-                            <span class="text-red-200">If validation fails (e.g., using <span class="font-mono">name@gmail.com</span>):</span> Show rejection reason, halt access, and prompt to select a supported Google account.
+                            <span class="text-red-200">
+                                <span data-lang="en">If validation fails (e.g., using <span class="font-mono">name@gmail.com</span>):</span> Show rejection reason, halt access, and prompt to select a supported Google account.</span>
+                            <span data-lang="th">
+                                <span data-lang="en">หากตรวจสอบไม่ผ่าน (เช่น ใช้ <span class="font-mono">name@gmail.com</span>):</span> แสดงเหตุผลปฏิเสธ หยุดการเข้าถึง และให้ผู้ใช้เลือกบัญชี Google ที่รองรับใหม่</span>
                         </div>
                     </div>
 
@@ -434,21 +614,27 @@
             <!-- Slide 8: Hybrid Matching -->
             <div id="slide-8" class="slide space-y-6">
                 <h3 class="text-xl font-bold text-white mb-4 flex items-center">
-                    <i class="fas fa-brain text-purple-500 mr-2"></i> Activity Matching (Hybrid Matching)
+                    <i class="fas fa-brain text-purple-500 mr-2"></i> 
+                    <span data-lang="en">Activity Matching (Hybrid Matching)</span><span data-lang="th">ระบบจับคู่กิจกรรม (Hybrid Matching)</span>
                 </h3>
                 
                 <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                    <!-- A. Create / Update Embedding -->
                     <div class="dashboard-card border-t-2 border-t-blue-500">
-                        <h4 class="text-sm font-semibold text-white mb-4">A. Create / Update Embedding</h4>
+                        <h4 class="text-sm font-semibold text-white mb-4">
+                            <span data-lang="en">A. Create / Update Embedding</span><span data-lang="th">A. สร้างและอัปเดต Embedding</span>
+                        </h4>
                         <div class="flex flex-col space-y-3 relative">
                             <div class="bg-slate-800 p-3 rounded flex items-center border border-slate-700">
                                 <span class="w-6 h-6 bg-blue-900 text-blue-300 rounded-full flex items-center justify-center text-xs mr-3">1</span>
-                                <span class="text-sm text-slate-300">Save Data (Profile or Activity)</span>
+                                <span class="text-sm text-slate-300">
+                                    <span data-lang="en">Save Data (Profile or Activity)</span><span data-lang="th">บันทึกข้อมูล (Profile หรือ Activity)</span>
+                                </span>
                             </div>
                             <div class="bg-slate-800 p-3 rounded flex items-center border border-slate-700">
                                 <span class="w-6 h-6 bg-blue-900 text-blue-300 rounded-full flex items-center justify-center text-xs mr-3">2</span>
-                                <span class="text-sm text-slate-300">Extract Matching Text</span>
+                                <span class="text-sm text-slate-300">
+                                    <span data-lang="en">Extract Matching Text</span><span data-lang="th">สกัดข้อความที่ใช้ประมวลผล (Matching Text)</span>
+                                </span>
                             </div>
                             <div class="bg-indigo-900/40 p-3 rounded flex items-center border border-indigo-700">
                                 <span class="w-6 h-6 bg-indigo-600 text-white rounded-full flex items-center justify-center text-xs mr-3">3</span>
@@ -459,37 +645,47 @@
                                 <span class="w-6 h-6 bg-emerald-600 text-white rounded-full flex items-center justify-center text-xs mr-3">4</span>
                                 <div class="flex-1">
                                     <span class="text-sm text-white font-medium block">Supabase pgvector</span>
-                                    <span class="text-xs text-emerald-400">Save status: READY</span>
+                                    <span class="text-xs text-emerald-400">
+                                        <span data-lang="en">Save status: READY</span><span data-lang="th">บันทึกสถานะ: READY</span>
+                                    </span>
                                 </div>
                                 <i class="fas fa-database text-emerald-500"></i>
                             </div>
                         </div>
                     </div>
 
-                    <!-- B. Recommend Activities -->
                     <div class="dashboard-card border-t-2 border-t-purple-500">
-                        <h4 class="text-sm font-semibold text-white mb-4">B. Recommend Activities</h4>
+                        <h4 class="text-sm font-semibold text-white mb-4">
+                            <span data-lang="en">B. Recommend Activities</span><span data-lang="th">B. การแนะนำกิจกรรมให้ผู้ใช้</span>
+                        </h4>
                         <div class="flex flex-col space-y-2">
-                            <div class="flex items-center text-sm text-slate-300 bg-slate-800 p-2 rounded"><span class="w-5 h-5 bg-slate-700 rounded-full text-center text-xs leading-5 mr-2">1</span> Load Profile (Check Completeness)</div>
-                            <div class="flex items-center text-sm text-slate-300 bg-slate-800 p-2 rounded"><span class="w-5 h-5 bg-slate-700 rounded-full text-center text-xs leading-5 mr-2">2</span> Hard Filter (OPEN / Not Full / Not Overlap)</div>
+                            <div class="flex items-center text-sm text-slate-300 bg-slate-800 p-2 rounded"><span class="w-5 h-5 bg-slate-700 rounded-full text-center text-xs leading-5 mr-2">1</span> <span data-lang="en">Load Profile (Check Completeness)</span><span data-lang="th">โหลดข้อมูล Profile (ตรวจสอบความสมบูรณ์)</span></div>
+                            <div class="flex items-center text-sm text-slate-300 bg-slate-800 p-2 rounded"><span class="w-5 h-5 bg-slate-700 rounded-full text-center text-xs leading-5 mr-2">2</span> <span data-lang="en">Hard Filter (OPEN / Not Full / Not Overlap)</span><span data-lang="th">คัดกรองเบื้องต้น (สถานะ OPEN / ไม่เต็ม / เวลาไม่ชน)</span></div>
                             <div class="flex items-center text-sm text-white font-medium bg-purple-900/30 border border-purple-800/50 p-2 rounded"><span class="w-5 h-5 bg-purple-600 rounded-full text-center text-xs leading-5 mr-2">3</span> Vector Search</div>
-                            <div class="flex items-center text-sm text-slate-300 bg-slate-800 p-2 rounded"><span class="w-5 h-5 bg-slate-700 rounded-full text-center text-xs leading-5 mr-2">4</span> Calculate Hybrid Score (Rule + Semantic)</div>
-                            <div class="flex items-center text-sm text-slate-300 bg-slate-800 p-2 rounded"><span class="w-5 h-5 bg-slate-700 rounded-full text-center text-xs leading-5 mr-2">5</span> Rank & Explain</div>
+                            <div class="flex items-center text-sm text-slate-300 bg-slate-800 p-2 rounded"><span class="w-5 h-5 bg-slate-700 rounded-full text-center text-xs leading-5 mr-2">4</span> <span data-lang="en">Calculate Hybrid Score (Rule + Semantic)</span><span data-lang="th">คำนวณคะแนน Hybrid (Rule + Semantic)</span></div>
+                            <div class="flex items-center text-sm text-slate-300 bg-slate-800 p-2 rounded"><span class="w-5 h-5 bg-slate-700 rounded-full text-center text-xs leading-5 mr-2">5</span> <span data-lang="en">Rank & Explain</span><span data-lang="th">จัดอันดับและอธิบายเหตุผล</span></div>
                         </div>
                     </div>
                 </div>
 
-                <!-- Calculation Details -->
                 <div class="dashboard-card bg-slate-900 border border-slate-700 mt-6">
-                    <h4 class="text-sm font-bold text-white mb-3">Scoring Algorithm Example</h4>
+                    <h4 class="text-sm font-bold text-white mb-3">
+                        <span data-lang="en">Scoring Algorithm Example</span><span data-lang="th">ตัวอย่างการคิดคะแนน (Scoring Algorithm)</span>
+                    </h4>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
                         <div class="bg-slate-800 p-3 rounded">
-                            <p class="text-xs text-slate-400 mb-1">User Profile Bio:</p>
-                            <p class="text-sm text-slate-200 italic">"Interested in building websites and designing user experiences."</p>
+                            <p class="text-xs text-slate-400 mb-1"><span data-lang="en">User Profile Bio:</span><span data-lang="th">ประวัติในโปรไฟล์ผู้ใช้:</span></p>
+                            <p class="text-sm text-slate-200 italic">
+                                <span data-lang="en">"Interested in building websites and designing user experiences."</span>
+                                <span data-lang="th">"สนใจทำหน้าเว็บและออกแบบประสบการณ์ผู้ใช้"</span>
+                            </p>
                         </div>
                         <div class="bg-slate-800 p-3 rounded">
-                            <p class="text-xs text-slate-400 mb-1">Activity Requirement:</p>
-                            <p class="text-sm text-slate-200 italic">"Looking for peers to help with UI/UX for a Web Application."</p>
+                            <p class="text-xs text-slate-400 mb-1"><span data-lang="en">Activity Requirement:</span><span data-lang="th">ความต้องการของกิจกรรม:</span></p>
+                            <p class="text-sm text-slate-200 italic">
+                                <span data-lang="en">"Looking for peers to help with UI/UX for a Web Application."</span>
+                                <span data-lang="th">"หาเพื่อนช่วยทำ UI/UX สำหรับ Web Application"</span>
+                            </p>
                         </div>
                     </div>
                     <div class="bg-black/50 p-4 rounded-lg font-mono text-sm">
@@ -504,24 +700,23 @@
 
             <!-- Slide 9: Feature Flow -->
             <div id="slide-9" class="slide space-y-6">
-                <h3 class="text-xl font-bold text-white mb-4">Activity & Matching Flow</h3>
+                <h3 class="text-xl font-bold text-white mb-4">
+                    <span data-lang="en">Activity & Matching Flow</span><span data-lang="th">ลำดับการทำงานของกิจกรรม</span>
+                </h3>
                 
                 <div class="dashboard-card overflow-hidden">
                     <div class="flex flex-col space-y-8">
                         
-                        <!-- Top Row: Creation to Match -->
                         <div class="flex flex-col md:flex-row items-center justify-between gap-4">
-                            <!-- Creator -->
                             <div class="bg-slate-800 border border-slate-700 p-4 rounded-lg w-full md:w-1/4 text-center">
                                 <i class="fas fa-user-edit text-2xl text-blue-400 mb-2"></i>
-                                <h4 class="font-bold text-white text-sm">Creator</h4>
-                                <p class="text-xs text-slate-400">Fills Activity details</p>
+                                <h4 class="font-bold text-white text-sm"><span data-lang="en">Creator</span><span data-lang="th">ผู้สร้าง</span></h4>
+                                <p class="text-xs text-slate-400"><span data-lang="en">Fills Activity details</span><span data-lang="th">กรอกรายละเอียดกิจกรรม</span></p>
                                 <div class="mt-2 text-[10px] bg-slate-900 p-1 rounded text-slate-500">Zod Validation</div>
                             </div>
                             
                             <i class="fas fa-arrow-right text-slate-600 hidden md:block"></i>
                             
-                            <!-- DB -->
                             <div class="bg-indigo-900/30 border border-indigo-700 p-4 rounded-lg w-full md:w-1/4 text-center">
                                 <i class="fas fa-database text-2xl text-indigo-400 mb-2"></i>
                                 <h4 class="font-bold text-white text-sm">PostgreSQL</h4>
@@ -530,72 +725,69 @@
                             
                             <i class="fas fa-arrow-right text-slate-600 hidden md:block"></i>
                             
-                            <!-- Matching -->
                             <div class="bg-purple-900/30 border border-purple-700 p-4 rounded-lg w-full md:w-1/4 text-center">
                                 <i class="fas fa-cogs text-2xl text-purple-400 mb-2"></i>
-                                <h4 class="font-bold text-white text-sm">Matching Service</h4>
-                                <p class="text-xs text-slate-400">Compares with Profiles</p>
+                                <h4 class="font-bold text-white text-sm"><span data-lang="en">Matching Service</span><span data-lang="th">ระบบจับคู่</span></h4>
+                                <p class="text-xs text-slate-400"><span data-lang="en">Compares with Profiles</span><span data-lang="th">เปรียบเทียบกับโปรไฟล์</span></p>
                             </div>
 
                             <i class="fas fa-arrow-right text-slate-600 hidden md:block"></i>
                             
-                            <!-- Result -->
                             <div class="bg-emerald-900/30 border border-emerald-700 p-4 rounded-lg w-full md:w-1/4 text-center">
                                 <i class="fas fa-poll text-2xl text-emerald-400 mb-2"></i>
-                                <h4 class="font-bold text-white text-sm">Result</h4>
-                                <p class="text-xs text-emerald-300 font-mono">Score + Reasons</p>
+                                <h4 class="font-bold text-white text-sm"><span data-lang="en">Result</span><span data-lang="th">ผลลัพธ์</span></h4>
+                                <p class="text-xs text-emerald-300 font-mono"><span data-lang="en">Score + Reasons</span><span data-lang="th">คะแนน + เหตุผล</span></p>
                             </div>
                         </div>
 
                         <div class="border-t border-dashed border-slate-700 w-full"></div>
 
-                        <!-- Bottom Row: Request to Chat -->
                         <div class="flex flex-col md:flex-row items-stretch justify-between gap-4">
-                            <!-- Requester -->
                             <div class="bg-slate-800 border border-slate-700 p-4 rounded-lg w-full md:w-1/5 text-center flex flex-col justify-center">
                                 <i class="fas fa-hand-pointer text-2xl text-cyan-400 mb-2"></i>
-                                <h4 class="font-bold text-white text-sm">Requester</h4>
-                                <p class="text-xs text-slate-400">Submits Request</p>
+                                <h4 class="font-bold text-white text-sm"><span data-lang="en">Requester</span><span data-lang="th">ผู้ส่งคำขอ</span></h4>
+                                <p class="text-xs text-slate-400"><span data-lang="en">Submits Request</span><span data-lang="th">ส่งคำขอเข้าร่วม</span></p>
                             </div>
                             
                             <i class="fas fa-arrow-right text-slate-600 self-center hidden md:block"></i>
                             
-                            <!-- State Machine -->
                             <div class="bg-slate-800 border border-slate-700 p-4 rounded-lg w-full md:w-2/5">
-                                <h4 class="font-bold text-white text-sm text-center mb-3">Request Status</h4>
+                                <h4 class="font-bold text-white text-sm text-center mb-3"><span data-lang="en">Request Status</span><span data-lang="th">สถานะคำขอ</span></h4>
                                 <div class="space-y-2">
                                     <div class="flex justify-between items-center bg-slate-900 p-2 rounded text-xs">
                                         <span class="text-yellow-400 font-bold">PENDING</span>
-                                        <span class="text-slate-400">Waiting for owner</span>
+                                        <span class="text-slate-400"><span data-lang="en">Waiting for owner</span><span data-lang="th">รอเจ้าของพิจารณา</span></span>
                                     </div>
                                     <div class="flex justify-between items-center bg-slate-900 p-2 rounded text-xs">
                                         <span class="text-emerald-400 font-bold">ACCEPTED</span>
-                                        <span class="text-slate-400">Owner approved</span>
+                                        <span class="text-slate-400"><span data-lang="en">Owner approved</span><span data-lang="th">เจ้าของอนุมัติ</span></span>
                                     </div>
                                     <div class="flex justify-between items-center bg-slate-900 p-2 rounded text-xs">
                                         <span class="text-red-400 font-bold">REJECTED</span>
-                                        <span class="text-slate-400">Owner declined</span>
+                                        <span class="text-slate-400"><span data-lang="en">Owner declined</span><span data-lang="th">เจ้าของปฏิเสธ</span></span>
                                     </div>
                                     <div class="flex justify-between items-center bg-slate-900 p-2 rounded text-xs">
                                         <span class="text-slate-500 font-bold">CANCELLED</span>
-                                        <span class="text-slate-400">User withdrew</span>
+                                        <span class="text-slate-400"><span data-lang="en">User withdrew</span><span data-lang="th">ผู้ใช้ยกเลิกคำขอ</span></span>
                                     </div>
                                 </div>
                             </div>
                             
                             <i class="fas fa-arrow-right text-slate-600 self-center hidden md:block"></i>
                             
-                            <!-- Membership & Chat -->
                             <div class="bg-slate-800 border border-slate-700 p-4 rounded-lg w-full md:w-2/5 flex flex-col justify-center">
                                 <div class="bg-emerald-900/20 border border-emerald-800/50 p-3 rounded mb-3 text-center">
-                                    <h4 class="font-bold text-emerald-400 text-xs mb-1">Membership Auth</h4>
+                                    <h4 class="font-bold text-emerald-400 text-xs mb-1"><span data-lang="en">Membership Auth</span><span data-lang="th">ตรวจสอบสิทธิ์สมาชิก</span></h4>
                                     <p class="text-[10px] text-slate-400 font-mono">activity_members</p>
                                 </div>
                                 <div class="bg-blue-900/20 border border-blue-800/50 p-3 rounded text-center relative overflow-hidden">
                                     <div class="absolute inset-0 bg-gradient-to-r from-transparent via-blue-500/10 to-transparent animate-pulse"></div>
                                     <i class="fas fa-comments text-blue-400 mb-1"></i>
-                                    <h4 class="font-bold text-white text-xs">Activity Chat</h4>
-                                    <p class="text-[10px] text-slate-400">Access granted to approved members only</p>
+                                    <h4 class="font-bold text-white text-xs"><span data-lang="en">Activity Chat</span><span data-lang="th">แชทกิจกรรม</span></h4>
+                                    <p class="text-[10px] text-slate-400">
+                                        <span data-lang="en">Access granted to approved members only</span>
+                                        <span data-lang="th">เปิดให้เข้าเฉพาะสมาชิกที่ได้รับการอนุมัติแล้วเท่านั้น</span>
+                                    </p>
                                 </div>
                             </div>
                         </div>
@@ -606,29 +798,28 @@
 
             <!-- Slide 10: System Architecture -->
             <div id="slide-10" class="slide space-y-6">
-                <h3 class="text-xl font-bold text-white mb-4">System Architecture & Data Model</h3>
-                <p class="text-slate-400 text-sm mb-6">Full-Stack Development & Relational Database Design</p>
+                <h3 class="text-xl font-bold text-white mb-4"><span data-lang="en">System Architecture & Data Model</span><span data-lang="th">สถาปัตยกรรมระบบ และ Data Model</span></h3>
+                <p class="text-slate-400 text-sm mb-6"><span data-lang="en">Full-Stack Development & Relational Database Design</span><span data-lang="th">การพัฒนา Full-Stack และการออกแบบฐานข้อมูลเชิงสัมพันธ์</span></p>
                 
                 <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                    <!-- Layer Stack -->
                     <div class="space-y-3">
-                        <h4 class="text-sm font-semibold text-slate-300 uppercase tracking-wider mb-2">Technology Stack Layers</h4>
+                        <h4 class="text-sm font-semibold text-slate-300 uppercase tracking-wider mb-2"><span data-lang="en">Technology Stack Layers</span><span data-lang="th">ชั้นของเทคโนโลยี (Layers)</span></h4>
                         
                         <div class="bg-slate-800 border-l-4 border-l-cyan-500 p-4 rounded shadow">
-                            <div class="text-xs text-cyan-400 font-bold mb-1">1. Client Layer (Next.js UI)</div>
+                            <div class="text-xs text-cyan-400 font-bold mb-1"><span data-lang="en">1. Client Layer (Next.js UI)</span><span data-lang="th">1. ส่วนแสดงผล (Client Layer)</span></div>
                             <div class="text-sm text-slate-300">Tailwind CSS, Responsive Design</div>
                         </div>
                         <div class="text-center text-slate-600 py-1"><i class="fas fa-arrow-down"></i></div>
                         
                         <div class="bg-slate-800 border-l-4 border-l-blue-500 p-4 rounded shadow">
-                            <div class="text-xs text-blue-400 font-bold mb-1">2. App Layer (Server Actions / API)</div>
-                            <div class="text-sm text-slate-300">Backend Routing, Auth & Request Handling</div>
+                            <div class="text-xs text-blue-400 font-bold mb-1"><span data-lang="en">2. App Layer (Server Actions / API)</span><span data-lang="th">2. ส่วนแอปพลิเคชัน (App Layer)</span></div>
+                            <div class="text-sm text-slate-300"><span data-lang="en">Backend Routing, Auth & Request Handling</span><span data-lang="th">Backend Routing, จัดการคำขอและ Auth</span></div>
                         </div>
                         <div class="text-center text-slate-600 py-1"><i class="fas fa-arrow-down"></i></div>
                         
                         <div class="bg-slate-800 border-l-4 border-l-indigo-500 p-4 rounded shadow">
-                            <div class="text-xs text-indigo-400 font-bold mb-1">3. Service Layer (Business Logic)</div>
-                            <div class="text-sm text-slate-300">Matching Algorithm, AI Rules</div>
+                            <div class="text-xs text-indigo-400 font-bold mb-1"><span data-lang="en">3. Service Layer (Business Logic)</span><span data-lang="th">3. ส่วนบริการ (Service Layer)</span></div>
+                            <div class="text-sm text-slate-300"><span data-lang="en">Matching Algorithm, AI Rules</span><span data-lang="th">อัลกอริทึมจับคู่ และ AI Rules</span></div>
                         </div>
                         <div class="flex justify-center space-x-12 py-2">
                             <div class="text-slate-600"><i class="fas fa-arrow-down transform rotate-45"></i></div>
@@ -637,24 +828,22 @@
                         
                         <div class="flex space-x-4">
                             <div class="flex-1 bg-slate-800 border-t-4 border-t-emerald-500 p-4 rounded shadow">
-                                <div class="text-xs text-emerald-400 font-bold mb-1">4. Data Layer</div>
+                                <div class="text-xs text-emerald-400 font-bold mb-1"><span data-lang="en">4. Data Layer</span><span data-lang="th">4. ส่วนฐานข้อมูล</span></div>
                                 <div class="text-xs text-slate-300">Supabase, PostgreSQL, RLS, Realtime, pgvector</div>
                             </div>
                             <div class="flex-1 bg-slate-800 border-t-4 border-t-purple-500 p-4 rounded shadow">
-                                <div class="text-xs text-purple-400 font-bold mb-1">5. AI Layer</div>
-                                <div class="text-xs text-slate-300">Gemini Text Embedding (Vector Analysis)</div>
+                                <div class="text-xs text-purple-400 font-bold mb-1"><span data-lang="en">5. AI Layer</span><span data-lang="th">5. ส่วน AI</span></div>
+                                <div class="text-xs text-slate-300"><span data-lang="en">Gemini Text Embedding (Vector Analysis)</span><span data-lang="th">Gemini Text Embedding (วิเคราะห์ Vector)</span></div>
                             </div>
                         </div>
                     </div>
 
-                    <!-- Data Model Concept -->
                     <div class="dashboard-card bg-slate-900/50">
-                        <h4 class="text-sm font-semibold text-slate-300 uppercase tracking-wider mb-4">Core Data Domains</h4>
+                        <h4 class="text-sm font-semibold text-slate-300 uppercase tracking-wider mb-4"><span data-lang="en">Core Data Domains</span><span data-lang="th">โครงสร้างข้อมูลหลัก (Data Domains)</span></h4>
                         
                         <div class="space-y-6">
-                            <!-- Profile Domain -->
                             <div class="border border-slate-700 rounded-lg p-4 bg-slate-800/50">
-                                <h5 class="text-blue-400 font-bold text-sm mb-3 border-b border-slate-700 pb-2"><i class="fas fa-user-circle mr-2"></i>User Profile Domain</h5>
+                                <h5 class="text-blue-400 font-bold text-sm mb-3 border-b border-slate-700 pb-2"><i class="fas fa-user-circle mr-2"></i><span data-lang="en">User Profile Domain</span><span data-lang="th">โดเมนโปรไฟล์ผู้ใช้</span></h5>
                                 <ul class="text-xs text-slate-300 font-mono space-y-2 pl-2 border-l-2 border-slate-700">
                                     <li>profiles</li>
                                     <li class="pl-4 text-slate-500 flex items-center">├─ <span class="ml-2 text-slate-300">user_skills (1:N)</span></li>
@@ -663,9 +852,8 @@
                                 </ul>
                             </div>
 
-                            <!-- Activity Domain -->
                             <div class="border border-slate-700 rounded-lg p-4 bg-slate-800/50">
-                                <h5 class="text-emerald-400 font-bold text-sm mb-3 border-b border-slate-700 pb-2"><i class="fas fa-calendar-check mr-2"></i>Activity & Match Domain</h5>
+                                <h5 class="text-emerald-400 font-bold text-sm mb-3 border-b border-slate-700 pb-2"><i class="fas fa-calendar-check mr-2"></i><span data-lang="en">Activity & Match Domain</span><span data-lang="th">โดเมนกิจกรรมและการจับคู่</span></h5>
                                 <ul class="text-xs text-slate-300 font-mono space-y-2 pl-2 border-l-2 border-slate-700">
                                     <li>activities</li>
                                     <li class="pl-4 text-slate-500 flex items-center">├─ <span class="ml-2 text-slate-300">activity_required_skills (1:N)</span></li>
@@ -682,94 +870,92 @@
             <!-- Slide 11: Admin Dashboard -->
             <div id="slide-11" class="slide space-y-6">
                 <div class="flex justify-between items-center mb-6">
-                    <h3 class="text-xl font-bold text-white">Admin Dashboard & Permissions</h3>
+                    <h3 class="text-xl font-bold text-white"><span data-lang="en">Admin Dashboard & Permissions</span><span data-lang="th">แดชบอร์ดผู้ดูแลระบบและสิทธิ์การใช้งาน</span></h3>
                     <span class="bg-red-900/50 text-red-400 px-3 py-1 rounded-full text-xs font-bold border border-red-800">RESTRICTED ACCESS</span>
                 </div>
 
                 <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                    <!-- Core Modules -->
                     <div class="space-y-4">
                         <div class="dashboard-card flex items-start p-4 border-l-4 border-l-blue-500">
                             <div class="bg-blue-900/30 p-2 rounded text-blue-400 mr-4"><i class="fas fa-ticket-alt"></i></div>
                             <div>
-                                <h4 class="font-bold text-white text-sm">Ticket Center</h4>
-                                <p class="text-xs text-slate-400 mt-1">Centralized queue for user reports, system bugs, and account status requests.</p>
+                                <h4 class="font-bold text-white text-sm"><span data-lang="en">Ticket Center</span><span data-lang="th">ศูนย์รับเรื่อง (Ticket Center)</span></h4>
+                                <p class="text-xs text-slate-400 mt-1"><span data-lang="en">Centralized queue for user reports, system bugs, and account status requests.</span><span data-lang="th">คิวรวมสำหรับตรวจสอบรายงานจากผู้ใช้ บั๊กของระบบ และสถานะบัญชี</span></p>
                             </div>
                         </div>
                         <div class="dashboard-card flex items-start p-4 border-l-4 border-l-orange-500">
                             <div class="bg-orange-900/30 p-2 rounded text-orange-400 mr-4"><i class="fas fa-search"></i></div>
                             <div>
-                                <h4 class="font-bold text-white text-sm">Moderation Review</h4>
-                                <p class="text-xs text-slate-400 mt-1">Queue for reviewing posts and activities flagged by the rule-based system or users.</p>
+                                <h4 class="font-bold text-white text-sm"><span data-lang="en">Moderation Review</span><span data-lang="th">การจัดการเนื้อหา (Moderation Review)</span></h4>
+                                <p class="text-xs text-slate-400 mt-1"><span data-lang="en">Queue for reviewing posts and activities flagged by the rule-based system or users.</span><span data-lang="th">คิวตรวจสอบโพสต์และกิจกรรมที่ถูกรายงานจากผู้ใช้หรือระบบตรวจจับ</span></p>
                             </div>
                         </div>
                         <div class="dashboard-card flex items-start p-4 border-l-4 border-l-emerald-500">
                             <div class="bg-emerald-900/30 p-2 rounded text-emerald-400 mr-4"><i class="fas fa-users-cog"></i></div>
                             <div>
-                                <h4 class="font-bold text-white text-sm">User Management</h4>
-                                <p class="text-xs text-slate-400 mt-1">Monitor and manage student account statuses (ACTIVE, OVERDUE, SUSPENDED).</p>
+                                <h4 class="font-bold text-white text-sm"><span data-lang="en">User Management</span><span data-lang="th">จัดการผู้ใช้ (User Management)</span></h4>
+                                <p class="text-xs text-slate-400 mt-1"><span data-lang="en">Monitor and manage student account statuses (ACTIVE, OVERDUE, SUSPENDED).</span><span data-lang="th">ติดตามและจัดการสถานะบัญชีนักศึกษา (ACTIVE, OVERDUE, SUSPENDED)</span></p>
                             </div>
                         </div>
                         <div class="dashboard-card flex items-start p-4 border-l-4 border-l-purple-500">
                             <div class="bg-purple-900/30 p-2 rounded text-purple-400 mr-4"><i class="fas fa-history"></i></div>
                             <div>
-                                <h4 class="font-bold text-white text-sm">Audit Log System</h4>
-                                <p class="text-xs text-slate-400 mt-1">Immutable record of all administrative actions for transparency and traceability.</p>
+                                <h4 class="font-bold text-white text-sm"><span data-lang="en">Audit Log System</span><span data-lang="th">ระบบบันทึกประวัติ (Audit Log)</span></h4>
+                                <p class="text-xs text-slate-400 mt-1"><span data-lang="en">Immutable record of all administrative actions for transparency and traceability.</span><span data-lang="th">บันทึกการกระทำของแอดมินที่ไม่สามารถแก้ไขได้ เพื่อความโปร่งใสและตรวจสอบได้</span></p>
                             </div>
                         </div>
                     </div>
 
-                    <!-- Permission Matrix -->
                     <div class="dashboard-card flex flex-col">
-                        <h4 class="text-sm font-semibold text-slate-300 uppercase tracking-wider mb-4">Access Control Matrix</h4>
+                        <h4 class="text-sm font-semibold text-slate-300 uppercase tracking-wider mb-4"><span data-lang="en">Access Control Matrix</span><span data-lang="th">ตารางสิทธิ์การใช้งาน (Access Control)</span></h4>
                         <div class="overflow-x-auto flex-1">
                             <table class="w-full text-xs text-left text-slate-300">
                                 <thead class="text-[10px] uppercase bg-slate-800 text-slate-400">
                                     <tr>
-                                        <th class="px-3 py-2 rounded-tl">System Action</th>
-                                        <th class="px-3 py-2 text-center">Student</th>
-                                        <th class="px-3 py-2 text-center">Act. Owner</th>
+                                        <th class="px-3 py-2 rounded-tl"><span data-lang="en">System Action</span><span data-lang="th">การทำงาน</span></th>
+                                        <th class="px-3 py-2 text-center"><span data-lang="en">Student</span><span data-lang="th">นักศึกษา</span></th>
+                                        <th class="px-3 py-2 text-center"><span data-lang="en">Act. Owner</span><span data-lang="th">เจ้าของกิจกรรม</span></th>
                                         <th class="px-3 py-2 rounded-tr text-center text-red-400">Admin</th>
                                     </tr>
                                 </thead>
                                 <tbody class="divide-y divide-slate-800">
                                     <tr class="hover:bg-slate-800/30">
-                                        <td class="px-3 py-3">Approve/Reject Members</td>
+                                        <td class="px-3 py-3"><span data-lang="en">Approve/Reject Members</span><span data-lang="th">อนุมัติ/ปฏิเสธสมาชิก</span></td>
                                         <td class="px-3 py-3 text-center text-red-500"><i class="fas fa-times"></i></td>
-                                        <td class="px-3 py-3 text-center text-emerald-400"><i class="fas fa-check"></i><br><span class="text-[9px] text-slate-500">Own Activity</span></td>
-                                        <td class="px-3 py-3 text-center text-red-500"><i class="fas fa-times"></i><br><span class="text-[9px] text-slate-500">Prevent abuse</span></td>
+                                        <td class="px-3 py-3 text-center text-emerald-400"><i class="fas fa-check"></i><br><span class="text-[9px] text-slate-500"><span data-lang="en">Own Activity</span><span data-lang="th">กิจกรรมตนเอง</span></span></td>
+                                        <td class="px-3 py-3 text-center text-red-500"><i class="fas fa-times"></i><br><span class="text-[9px] text-slate-500"><span data-lang="en">Prevent abuse</span><span data-lang="th">ป้องกันการล่วงละเมิด</span></span></td>
                                     </tr>
                                     <tr class="hover:bg-slate-800/30">
-                                        <td class="px-3 py-3">Unlock Account (OVERDUE)</td>
+                                        <td class="px-3 py-3"><span data-lang="en">Unlock Account (OVERDUE)</span><span data-lang="th">ปลดล็อกบัญชี</span></td>
                                         <td class="px-3 py-3 text-center text-red-500"><i class="fas fa-times"></i></td>
                                         <td class="px-3 py-3 text-center text-red-500"><i class="fas fa-times"></i></td>
-                                        <td class="px-3 py-3 text-center text-emerald-400"><i class="fas fa-check"></i><br><span class="text-[9px] text-slate-500">Via Ticket</span></td>
+                                        <td class="px-3 py-3 text-center text-emerald-400"><i class="fas fa-check"></i><br><span class="text-[9px] text-slate-500"><span data-lang="en">Via Ticket</span><span data-lang="th">ผ่านทิกเก็ต</span></span></td>
                                     </tr>
                                     <tr class="hover:bg-slate-800/30">
-                                        <td class="px-3 py-3">Resolve Support Tickets</td>
+                                        <td class="px-3 py-3"><span data-lang="en">Resolve Support Tickets</span><span data-lang="th">จัดการทิกเก็ตแจ้งปัญหา</span></td>
                                         <td class="px-3 py-3 text-center text-red-500"><i class="fas fa-times"></i></td>
                                         <td class="px-3 py-3 text-center text-red-500"><i class="fas fa-times"></i></td>
                                         <td class="px-3 py-3 text-center text-emerald-400"><i class="fas fa-check"></i></td>
                                     </tr>
                                     <tr class="hover:bg-slate-800/30">
-                                        <td class="px-3 py-3">Reveal Anonymous Identity</td>
+                                        <td class="px-3 py-3"><span data-lang="en">Reveal Anonymous Identity</span><span data-lang="th">เปิดเผยตัวตนโพสต์นิรนาม</span></td>
                                         <td class="px-3 py-3 text-center text-red-500"><i class="fas fa-times"></i></td>
                                         <td class="px-3 py-3 text-center text-red-500"><i class="fas fa-times"></i></td>
-                                        <td class="px-3 py-3 text-center text-emerald-400"><i class="fas fa-check"></i><br><span class="text-[9px] text-slate-500">Reason required</span></td>
+                                        <td class="px-3 py-3 text-center text-emerald-400"><i class="fas fa-check"></i><br><span class="text-[9px] text-slate-500"><span data-lang="en">Reason required</span><span data-lang="th">ต้องระบุเหตุผล</span></span></td>
                                     </tr>
                                     <tr class="hover:bg-slate-800/30">
-                                        <td class="px-3 py-3">Ban User Without Reason</td>
+                                        <td class="px-3 py-3"><span data-lang="en">Ban User Without Reason</span><span data-lang="th">แบนผู้ใช้โดยไม่มีเหตุผล</span></td>
                                         <td class="px-3 py-3 text-center text-red-500"><i class="fas fa-times"></i></td>
                                         <td class="px-3 py-3 text-center text-red-500"><i class="fas fa-times"></i></td>
-                                        <td class="px-3 py-3 text-center text-red-500"><i class="fas fa-times"></i><br><span class="text-[9px] text-slate-500">System Denied</span></td>
+                                        <td class="px-3 py-3 text-center text-red-500"><i class="fas fa-times"></i><br><span class="text-[9px] text-slate-500"><span data-lang="en">System Denied</span><span data-lang="th">ระบบไม่อนุญาต</span></span></td>
                                     </tr>
                                 </tbody>
                             </table>
                         </div>
                         
                         <div class="mt-4 bg-red-900/20 border border-red-800 p-3 rounded-lg">
-                            <h5 class="text-xs font-bold text-red-400 mb-1"><i class="fas fa-exclamation-circle mr-1"></i> The Golden Rule: Accountability</h5>
-                            <p class="text-[10px] text-slate-300">Every critical administrative decision (e.g., banning a user, deleting a post, or revealing an anonymous author) requires a mandatory reason and is permanently recorded in the append-only Audit Log.</p>
+                            <h5 class="text-xs font-bold text-red-400 mb-1"><i class="fas fa-exclamation-circle mr-1"></i> <span data-lang="en">The Golden Rule: Accountability</span><span data-lang="th">กฎเหล็ก: ความรับผิดชอบ (Accountability)</span></h5>
+                            <p class="text-[10px] text-slate-300"><span data-lang="en">Every critical administrative decision (e.g., banning a user, deleting a post, or revealing an anonymous author) requires a mandatory reason and is permanently recorded in the append-only Audit Log.</span><span data-lang="th">ทุกการตัดสินใจสำคัญของแอดมิน (เช่น แบนผู้ใช้, ลบโพสต์, หรือเปิดเผยตัวตนโพสต์นิรนาม) ต้องระบุเหตุผลเสมอ และจะถูกบันทึกอย่างถาวรใน Audit Log ที่ไม่สามารถแก้ไขได้</span></p>
                         </div>
                     </div>
                 </div>
@@ -777,68 +963,68 @@
 
             <!-- Slide 12: Tools & Tech -->
             <div id="slide-12" class="slide space-y-6">
-                <h3 class="text-xl font-bold text-white mb-6">Tools & Technology Matrix</h3>
+                <h3 class="text-xl font-bold text-white mb-6"><span data-lang="en">Tools & Technology Matrix</span><span data-lang="th">เครื่องมือและเทคโนโลยี (Tools & Technology)</span></h3>
                 
                 <div class="dashboard-card overflow-hidden p-0">
                     <div class="overflow-x-auto">
                         <table class="w-full text-sm text-left">
                             <thead class="text-xs text-slate-400 uppercase bg-slate-900 border-b border-slate-700">
                                 <tr>
-                                    <th class="px-6 py-4">Architecture Layer</th>
-                                    <th class="px-6 py-4">Technology Stack</th>
-                                    <th class="px-6 py-4">Core Responsibility</th>
+                                    <th class="px-6 py-4"><span data-lang="en">Architecture Layer</span><span data-lang="th">เลเยอร์สถาปัตยกรรม</span></th>
+                                    <th class="px-6 py-4"><span data-lang="en">Technology Stack</span><span data-lang="th">เทคโนโลยี</span></th>
+                                    <th class="px-6 py-4"><span data-lang="en">Core Responsibility</span><span data-lang="th">ความรับผิดชอบหลัก</span></th>
                                 </tr>
                             </thead>
                             <tbody class="divide-y divide-slate-800 text-slate-300">
                                 <tr class="hover:bg-slate-800/50 transition group">
-                                    <td class="px-6 py-4 font-medium text-white group-hover:text-cyan-400">User Interface</td>
+                                    <td class="px-6 py-4 font-medium text-white group-hover:text-cyan-400"><span data-lang="en">User Interface</span><span data-lang="th">ส่วนแสดงผล (UI)</span></td>
                                     <td class="px-6 py-4 font-mono text-xs text-cyan-300">React, Tailwind CSS, shadcn/ui</td>
-                                    <td class="px-6 py-4 text-xs">Mobile-first UI, Components, Feedback States</td>
+                                    <td class="px-6 py-4 text-xs"><span data-lang="en">Mobile-first UI, Components, Feedback States</span><span data-lang="th">UI รองรับมือถือเป็นหลัก, คอมโพเนนต์, แสดงสถานะตอบสนอง</span></td>
                                 </tr>
                                 <tr class="hover:bg-slate-800/50 transition group">
-                                    <td class="px-6 py-4 font-medium text-white group-hover:text-cyan-400">Application</td>
+                                    <td class="px-6 py-4 font-medium text-white group-hover:text-cyan-400"><span data-lang="en">Application</span><span data-lang="th">แอปพลิเคชัน</span></td>
                                     <td class="px-6 py-4 font-mono text-xs text-cyan-300">Next.js, TypeScript</td>
-                                    <td class="px-6 py-4 text-xs">Routing, Server Actions, Business Logic, Type Safety</td>
+                                    <td class="px-6 py-4 text-xs"><span data-lang="en">Routing, Server Actions, Business Logic, Type Safety</span><span data-lang="th">การจัดการเร้าติ้ง, Server Actions, ลอจิกธุรกิจ, ตรวจสอบชนิดตัวแปร</span></td>
                                 </tr>
                                 <tr class="hover:bg-slate-800/50 transition group">
-                                    <td class="px-6 py-4 font-medium text-white group-hover:text-cyan-400">Input Safety</td>
+                                    <td class="px-6 py-4 font-medium text-white group-hover:text-cyan-400"><span data-lang="en">Input Safety</span><span data-lang="th">ความปลอดภัยข้อมูลเข้า</span></td>
                                     <td class="px-6 py-4 font-mono text-xs text-cyan-300">React Hook Form, Zod</td>
-                                    <td class="px-6 py-4 text-xs">Form State Management and Runtime Validation</td>
+                                    <td class="px-6 py-4 text-xs"><span data-lang="en">Form State Management and Runtime Validation</span><span data-lang="th">จัดการสถานะฟอร์ม และตรวจสอบข้อมูลระหว่างทำงาน</span></td>
                                 </tr>
                                 <tr class="hover:bg-slate-800/50 transition group bg-slate-800/20">
-                                    <td class="px-6 py-4 font-medium text-white group-hover:text-emerald-400">Identity & Data</td>
+                                    <td class="px-6 py-4 font-medium text-white group-hover:text-emerald-400"><span data-lang="en">Identity & Data</span><span data-lang="th">การยืนยันตัวตน & ข้อมูล</span></td>
                                     <td class="px-6 py-4 font-mono text-xs text-emerald-300">Google OAuth, Supabase Auth, PostgreSQL</td>
-                                    <td class="px-6 py-4 text-xs">Accounts, Sessions, Schemas, Queries, Constraints, Transactions</td>
+                                    <td class="px-6 py-4 text-xs"><span data-lang="en">Accounts, Sessions, Schemas, Queries, Constraints, Transactions</span><span data-lang="th">บัญชีผู้ใช้, เซสชัน, โครงสร้างข้อมูล, คำสั่งสืบค้น, ข้อจำกัด, ทรานแซกชัน</span></td>
                                 </tr>
                                 <tr class="hover:bg-slate-800/50 transition group bg-slate-800/20">
-                                    <td class="px-6 py-4 font-medium text-white group-hover:text-emerald-400">Authorization</td>
+                                    <td class="px-6 py-4 font-medium text-white group-hover:text-emerald-400"><span data-lang="en">Authorization</span><span data-lang="th">การอนุญาตสิทธิ์</span></td>
                                     <td class="px-6 py-4 font-mono text-xs text-emerald-300">Server RBAC, Row Level Security (RLS)</td>
-                                    <td class="px-6 py-4 text-xs">Role, Owner, Member, and Row-level Permissions</td>
+                                    <td class="px-6 py-4 text-xs"><span data-lang="en">Role, Owner, Member, and Row-level Permissions</span><span data-lang="th">สิทธิ์ตามบทบาท, เจ้าของ, สมาชิก และการป้องกันระดับแถวข้อมูล</span></td>
                                 </tr>
                                 <tr class="hover:bg-slate-800/50 transition group bg-purple-900/10">
-                                    <td class="px-6 py-4 font-medium text-white group-hover:text-purple-400">Matching Core</td>
+                                    <td class="px-6 py-4 font-medium text-white group-hover:text-purple-400"><span data-lang="en">Matching Core</span><span data-lang="th">แกนระบบจับคู่</span></td>
                                     <td class="px-6 py-4 font-mono text-xs text-purple-300">Rule-Based Matching Engine</td>
-                                    <td class="px-6 py-4 text-xs">Skill, Interest, Major, and Year Scoring</td>
+                                    <td class="px-6 py-4 text-xs"><span data-lang="en">Skill, Interest, Major, and Year Scoring</span><span data-lang="th">ระบบให้คะแนนตามทักษะ ความสนใจ สาขา และชั้นปี</span></td>
                                 </tr>
                                 <tr class="hover:bg-slate-800/50 transition group bg-purple-900/10">
-                                    <td class="px-6 py-4 font-medium text-white group-hover:text-purple-400">AI Matching</td>
+                                    <td class="px-6 py-4 font-medium text-white group-hover:text-purple-400"><span data-lang="en">AI Matching</span><span data-lang="th">การจับคู่ด้วย AI</span></td>
                                     <td class="px-6 py-4 font-mono text-xs text-purple-300">Gemini Text Embedding, pgvector</td>
-                                    <td class="px-6 py-4 text-xs">Semantic Vector Search and Cosine Similarity</td>
+                                    <td class="px-6 py-4 text-xs"><span data-lang="en">Semantic Vector Search and Cosine Similarity</span><span data-lang="th">ค้นหาด้วยความหมายเชิงเวกเตอร์ และหาค่า Cosine Similarity</span></td>
                                 </tr>
                                 <tr class="hover:bg-slate-800/50 transition group bg-purple-900/10">
-                                    <td class="px-6 py-4 font-medium text-white group-hover:text-purple-400">Hybrid Ranking</td>
+                                    <td class="px-6 py-4 font-medium text-white group-hover:text-purple-400"><span data-lang="en">Hybrid Ranking</span><span data-lang="th">การจัดอันดับแบบผสม</span></td>
                                     <td class="px-6 py-4 font-mono text-xs text-purple-300">Rule Score + Semantic Score</td>
-                                    <td class="px-6 py-4 text-xs">Final Match Score Calculation and Activity Ranking</td>
+                                    <td class="px-6 py-4 text-xs"><span data-lang="en">Final Match Score Calculation and Activity Ranking</span><span data-lang="th">คำนวณคะแนนจับคู่รวมขั้นสุดท้าย และจัดอันดับกิจกรรม</span></td>
                                 </tr>
                                 <tr class="hover:bg-slate-800/50 transition group">
                                     <td class="px-6 py-4 font-medium text-white group-hover:text-blue-400">Realtime</td>
                                     <td class="px-6 py-4 font-mono text-xs text-blue-300">Supabase Realtime</td>
-                                    <td class="px-6 py-4 text-xs">Instant Event Broadcasting (UI updates, not authorization)</td>
+                                    <td class="px-6 py-4 text-xs"><span data-lang="en">Instant Event Broadcasting (UI updates, not authorization)</span><span data-lang="th">ถ่ายทอดเหตุการณ์แบบทันที (เพื่ออัปเดต UI ไม่เกี่ยวกับเรื่องสิทธิ์)</span></td>
                                 </tr>
                                 <tr class="hover:bg-slate-800/50 transition group">
                                     <td class="px-6 py-4 font-medium text-white group-hover:text-red-400">Admin</td>
                                     <td class="px-6 py-4 font-mono text-xs text-red-300">Next.js, PostgreSQL, Audit Log</td>
-                                    <td class="px-6 py-4 text-xs">Report Review, Moderation System, User Management</td>
+                                    <td class="px-6 py-4 text-xs"><span data-lang="en">Report Review, Moderation System, User Management</span><span data-lang="th">ระบบตรวจสอบรายงาน จัดการเนื้อหา และจัดการผู้ใช้งาน</span></td>
                                 </tr>
                             </tbody>
                         </table>
@@ -850,34 +1036,55 @@
     </main>
 
     <script>
+        // Language Toggle Logic
+        let currentLang = 'en'; // Set Default to English
+        
+        function toggleLanguage() {
+            document.body.classList.remove('th-mode', 'en-mode');
+            currentLang = currentLang === 'th' ? 'en' : 'th';
+            document.body.classList.add(currentLang + '-mode');
+            updateSidebar();
+        }
+
         // Slide Navigation Logic
         const slides = [
-            { id: 1, title: "Overview & Workflow", icon: "fa-home" },
-            { id: 2, title: "Problem Statement", icon: "fa-exclamation-triangle" },
-            { id: 3, title: "Objectives", icon: "fa-bullseye" },
-            { id: 4, title: "Target Users", icon: "fa-users" },
-            { id: 5, title: "System Scope", icon: "fa-expand" },
-            { id: 6, title: "Core Modules", icon: "fa-th-large" },
-            { id: 7, title: "Auth Flow", icon: "fa-sign-in-alt" },
-            { id: 8, title: "Hybrid Matching", icon: "fa-brain" },
-            { id: 9, title: "Activity Flow", icon: "fa-project-diagram" },
-            { id: 10, title: "Architecture", icon: "fa-sitemap" },
-            { id: 11, title: "Admin & Permissions", icon: "fa-user-shield" },
-            { id: 12, title: "Tools & Technology", icon: "fa-code" }
+            { id: 1, titleEn: "Overview & Workflow", titleTh: "ภาพรวมและขั้นตอน", icon: "fa-home" },
+            { id: 2, title: "Problem Statement", titleEn: "Problem Statement", titleTh: "ปัญหาที่พบ", icon: "fa-exclamation-triangle" },
+            { id: 3, titleEn: "Objectives", titleTh: "วัตถุประสงค์", icon: "fa-bullseye" },
+            { id: 4, titleEn: "Target Users", titleTh: "กลุ่มผู้ใช้งาน", icon: "fa-users" },
+            { id: 5, titleEn: "System Scope", titleTh: "ขอบเขตระบบ", icon: "fa-expand" },
+            { id: 6, titleEn: "Core Modules", titleTh: "โมดูลหลัก", icon: "fa-th-large" },
+            { id: 7, titleEn: "Auth Flow", titleTh: "ขั้นตอนการล็อกอิน", icon: "fa-sign-in-alt" },
+            { id: 8, titleEn: "Hybrid Matching", titleTh: "ระบบจับคู่กิจกรรม", icon: "fa-brain" },
+            { id: 9, titleEn: "Activity Flow", titleTh: "ลำดับของกิจกรรม", icon: "fa-project-diagram" },
+            { id: 10, titleEn: "Architecture", titleTh: "สถาปัตยกรรมระบบ", icon: "fa-sitemap" },
+            { id: 11, titleEn: "Admin & Permissions", titleTh: "แอดมินและสิทธิ์", icon: "fa-user-shield" },
+            { id: 12, titleEn: "Tools & Technology", titleTh: "เครื่องมือพัฒนา", icon: "fa-code" }
         ];
 
         const navMenu = document.getElementById('nav-menu');
         const titleElement = document.getElementById('current-slide-title');
         let currentSlideId = 1;
 
+        function updateSidebar() {
+            // Update Title Text
+            const activeSlide = slides.find(s => s.id === currentSlideId);
+            titleElement.innerText = currentLang === 'th' ? activeSlide.titleTh : activeSlide.titleEn;
+
+            // Update Nav Item Texts
+            slides.forEach(slide => {
+                const btnTextSpan = document.getElementById(`nav-text-${slide.id}`);
+                if (btnTextSpan) {
+                    btnTextSpan.innerText = `${slide.id}. ${currentLang === 'th' ? slide.titleTh : slide.titleEn}`;
+                }
+            });
+        }
+
         function switchSlide(id) {
             currentSlideId = id;
-            // Hide all slides
             document.querySelectorAll('.slide').forEach(s => s.classList.remove('active'));
-            // Show active slide
             document.getElementById(`slide-${id}`).classList.add('active');
             
-            // Update Nav styling
             document.querySelectorAll('.nav-item').forEach(n => {
                 n.classList.remove('bg-indigo-600', 'text-white');
                 n.classList.add('text-slate-400', 'hover:bg-slate-800');
@@ -886,10 +1093,8 @@
             activeNav.classList.remove('text-slate-400', 'hover:bg-slate-800');
             activeNav.classList.add('bg-indigo-600', 'text-white');
 
-            // Update Title
-            titleElement.innerText = slides.find(s => s.id === id).title;
+            updateSidebar();
             
-            // Update Next/Prev button states
             document.getElementById('prev-btn').disabled = (id === 1);
             document.getElementById('next-btn').disabled = (id === slides.length);
         }
@@ -913,7 +1118,18 @@
             const btn = document.createElement('button');
             btn.id = `nav-${slide.id}`;
             btn.className = `nav-item w-full text-left px-4 py-3 rounded-lg text-sm transition flex items-center ${slide.id === 1 ? 'bg-indigo-600 text-white' : 'text-slate-400 hover:bg-slate-800'}`;
-            btn.innerHTML = `<i class="fas ${slide.icon} w-6 text-center mr-2"></i> ${slide.id}. ${slide.title}`;
+            
+            // Icon
+            const icon = document.createElement('i');
+            icon.className = `fas ${slide.icon} w-6 text-center mr-2`;
+            
+            // Text Span
+            const textSpan = document.createElement('span');
+            textSpan.id = `nav-text-${slide.id}`;
+            textSpan.innerText = `${slide.id}. ${currentLang === 'th' ? slide.titleTh : slide.titleEn}`;
+
+            btn.appendChild(icon);
+            btn.appendChild(textSpan);
             btn.onclick = () => switchSlide(slide.id);
             navMenu.appendChild(btn);
         });
